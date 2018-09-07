@@ -1,4 +1,4 @@
-﻿Text validation
+Text validation
 Status bar
 Logging? Previous results window?
 Max string length + override to max
@@ -21,4 +21,4 @@ Dictionary search
 TestNet support
 Switch PC off when done?
 If search text is all numbers, make search case sensitive to avoid touppering?
-
+MVVMLight/Cailiburn.Microfy
