@@ -129,12 +129,14 @@
             <Button Width="100"
                     Height="30"
                     Command="{Binding SearchCommand}"
-                    Content="Search" />
+                    Content="Search"
+                    IsDefault="True" />
             <Button Width="100"
                     Height="30"
                     Margin="10"
                     Command="{Binding CancelCommand}"
-                    Content="Cancel" />
+                    Content="Cancel"
+                    IsCancel="True" />
             <!--  End Buttons  -->
         </StackPanel>
         <!--  End Settings and Buttons  -->
