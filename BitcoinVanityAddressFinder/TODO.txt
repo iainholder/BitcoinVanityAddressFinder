@@ -1,0 +1,24 @@
+﻿Text validation
+Status bar
+Logging? Previous results window?
+Max string length + override to max
+Estimated compute time
+Unit tests
+Cores used label
+Case sensitive toggle
+Begins/Ends toggle? Don't forget first char is number
+Cancel support
+Layout
+Error display
+Time display
+Attempts display
+Play a sound when finished option
+Number of cores selector (override to max?)
+Design time viewmodel
+Highlight matching text section
+Toggles for begins/ends
+Dictionary search
+TestNet support
+Switch PC off when done?
+If search text is all numbers, make search case sensitive to avoid touppering?
+
