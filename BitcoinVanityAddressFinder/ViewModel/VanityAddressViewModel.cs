@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using BitcoinVanityAddressFinder.Annotations;
 using BitcoinVanityAddressFinder.Services;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.ViewModel
 {
-    public sealed class VanityAddressViewModel : INotifyPropertyChanged, IDataErrorInfo
+    public sealed class VanityAddressViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _address;
 
@@ -55,7 +55,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _networkComboBoxSelectedItem = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -89,7 +89,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     _coreComboBoxSelectedItem = value;
                 }
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -106,7 +106,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _vanityText = value.Replace(" ", "");
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -117,7 +117,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _address = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -128,7 +128,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _isSearching = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -139,7 +139,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _privateKey = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -150,7 +150,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _isCaseSensitive = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -161,7 +161,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _isStartsWith = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -172,7 +172,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _isEndsWith = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -183,7 +183,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _isBeep = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -194,7 +194,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 _statusText = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -229,8 +229,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
         }
 
         public string Error { get; private set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private bool CanExecuteSearch()
         {
@@ -300,12 +298,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 IsSearching = false;
                 SearchCommand.RaiseCanExecuteChanged();
             }
-        }
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
