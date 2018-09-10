@@ -43,16 +43,19 @@ namespace BitcoinVanityAddressFinder.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<VanityAddressViewModel>();
         }
 
         public MainViewModel Main
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
         }
-        
+
+        public VanityAddressViewModel VanityAddressViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<VanityAddressViewModel>(); }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

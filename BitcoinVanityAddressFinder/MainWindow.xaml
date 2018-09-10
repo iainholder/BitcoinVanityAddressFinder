@@ -8,6 +8,7 @@
         Width="800"
         Height="350"
         Background="#222222"
+        DataContext="{Binding VanityAddressViewModel, Source={StaticResource Locator}}"
         FontFamily="Consolas"
         FontSize="20"
         ResizeMode="NoResize"

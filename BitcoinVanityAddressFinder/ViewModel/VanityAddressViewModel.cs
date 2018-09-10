@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using BitcoinVanityAddressFinder.Annotations;
 using BitcoinVanityAddressFinder.Services;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.ViewModel
 {
-    public sealed class VanityAddressViewModel : INotifyPropertyChanged, IDataErrorInfo
+    public sealed class VanityAddressViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _address;
 
@@ -52,11 +52,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public Network NetworkComboBoxSelectedItem
         {
             get { return _networkComboBoxSelectedItem; }
-            set
-            {
-                _networkComboBoxSelectedItem = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _networkComboBoxSelectedItem, value); }
         }
 
         [UsedImplicitly]
@@ -89,7 +85,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     _coreComboBoxSelectedItem = value;
                 }
 
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -103,99 +99,63 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public string VanityText
         {
             get { return _vanityText; }
-            set
-            {
-                _vanityText = value.Replace(" ", "");
-                OnPropertyChanged();
-            }
+            set { Set(ref _vanityText, value.Replace(" ", "")); }
         }
 
         [UsedImplicitly]
         public string Address
         {
             get { return _address; }
-            set
-            {
-                _address = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _address, value); }
         }
 
         [UsedImplicitly]
         public bool IsSearching
         {
             get { return _isSearching; }
-            set
-            {
-                _isSearching = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isSearching, value); }
         }
 
         [UsedImplicitly]
         public string PrivateKey
         {
             get { return _privateKey; }
-            set
-            {
-                _privateKey = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _privateKey, value); }
         }
 
         [UsedImplicitly]
         public bool IsCaseSensitive
         {
             get { return _isCaseSensitive; }
-            set
-            {
-                _isCaseSensitive = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isCaseSensitive, value); }
         }
 
         [UsedImplicitly]
         public bool IsStartsWith
         {
             get { return _isStartsWith; }
-            set
-            {
-                _isStartsWith = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isStartsWith, value); }
         }
 
         [UsedImplicitly]
         public bool IsEndsWith
         {
             get { return _isEndsWith; }
-            set
-            {
-                _isEndsWith = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isEndsWith, value); }
         }
 
         [UsedImplicitly]
         public bool IsBeep
         {
             get { return _isBeep; }
-            set
-            {
-                _isBeep = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _isBeep, value); }
         }
 
         [UsedImplicitly]
         public string StatusText
         {
             get { return _statusText; }
-            set
-            {
-                _statusText = value;
-                OnPropertyChanged();
-            }
+            set { Set(ref _statusText, value); }
         }
 
         public string this[string columnName]
@@ -229,8 +189,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
         }
 
         public string Error { get; private set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private bool CanExecuteSearch()
         {
@@ -300,12 +258,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 IsSearching = false;
                 SearchCommand.RaiseCanExecuteChanged();
             }
-        }
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
