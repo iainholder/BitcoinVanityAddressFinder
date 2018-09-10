@@ -1,4 +1,4 @@
-﻿
+
 TODO
 ===============================================================================
 Override max string length
@@ -30,4 +30,3 @@ Logging? Previous results window? - not doing. too many dangerous implications.
 Design time viewmodel - not doing - just used fallback values
 Switch PC off when done? - not doing as not going to log.
 If search text is all numbers, make search case sensitive to avoid touppering? - probably not worth doing. the ux could get confusing if we keep on automatically toggling based on value in textbox.
-
