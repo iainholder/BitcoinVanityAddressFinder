@@ -1,24 +1,33 @@
-﻿Text validation
-Status bar
-Logging? Previous results window?
-Max string length + override to max
-Estimated compute time
-Unit tests
-Cores used label
-Case sensitive toggle
-Begins/Ends toggle? Don't forget first char is number
-Cancel support
-Layout
-Error display
-Time display
-Attempts display
-Play a sound when finished option
-Number of cores selector (override to max?)
-Design time viewmodel
-Highlight matching text section
-Toggles for begins/ends
+﻿
+TODO
+===============================================================================
+Override max string length
+Estimated compute time.
+Highlight matching text section  
 Dictionary search
-TestNet support
-Switch PC off when done?
-If search text is all numbers, make search case sensitive to avoid touppering?
+
+DONE
+===============================================================================
+Text validation - done. how much more? should do 1 vs l etc?
+Status bar - done
+Max string length + override to max - done max string length.
+Unit tests - done
+Cores used label - done
+Case sensitive toggle - done
+Begins/Ends toggle? Don't forget first char is number - done
+Cancel support - done
+Layout - done
+Error display - done
+Time display - done - in status bar
+Attempts display - done - in status bar
+Play a sound when finished option - done
+Number of cores selector (override to max?) - done
+TestNet support - done
+
+NOT DOING
+===============================================================================
+Logging? Previous results window? - not doing. too many dangerous implications.
+Design time viewmodel - not doing - just used fallback values
+Switch PC off when done? - not doing as not going to log.
+If search text is all numbers, make search case sensitive to avoid touppering? - probably not worth doing. the ux could get confusing if we keep on automatically toggling based on value in textbox.
 
