@@ -45,23 +45,21 @@ namespace BitcoinVanityAddressFinder.ViewModel
             CoreComboBoxSelectedItem = Environment.ProcessorCount - 1;
         }
 
-        [UsedImplicitly]
-        public IEnumerable<Network> NetworkComboBoxItems { get; set; }
+        [UsedImplicitly] public IEnumerable<Network> NetworkComboBoxItems { get; set; }
 
         [UsedImplicitly]
         public Network NetworkComboBoxSelectedItem
         {
-            get { return _networkComboBoxSelectedItem; }
-            set { Set(ref _networkComboBoxSelectedItem, value); }
+            get => _networkComboBoxSelectedItem;
+            set => Set(ref _networkComboBoxSelectedItem, value);
         }
 
-        [UsedImplicitly]
-        public IEnumerable<int> CoreComboBoxItems { get; set; }
+        [UsedImplicitly] public IEnumerable<int> CoreComboBoxItems { get; set; }
 
         [UsedImplicitly]
         public int CoreComboBoxSelectedItem
         {
-            get { return _coreComboBoxSelectedItem; }
+            get => _coreComboBoxSelectedItem;
             set
             {
                 if (value > Environment.ProcessorCount - 1)
@@ -89,73 +87,71 @@ namespace BitcoinVanityAddressFinder.ViewModel
             }
         }
 
-        [UsedImplicitly]
-        public RelayCommand SearchCommand { get; set; }
+        [UsedImplicitly] public RelayCommand SearchCommand { get; set; }
 
-        [UsedImplicitly]
-        public RelayCommand CancelCommand { get; set; }
+        [UsedImplicitly] public RelayCommand CancelCommand { get; set; }
 
         [UsedImplicitly]
         public string VanityText
         {
-            get { return _vanityText; }
-            set { Set(ref _vanityText, value.Replace(" ", "")); }
+            get => _vanityText;
+            set => Set(ref _vanityText, value.Replace(" ", ""));
         }
 
         [UsedImplicitly]
         public string Address
         {
-            get { return _address; }
-            set { Set(ref _address, value); }
+            get => _address;
+            set => Set(ref _address, value);
         }
 
         [UsedImplicitly]
         public bool IsSearching
         {
-            get { return _isSearching; }
-            set { Set(ref _isSearching, value); }
+            get => _isSearching;
+            set => Set(ref _isSearching, value);
         }
 
         [UsedImplicitly]
         public string PrivateKey
         {
-            get { return _privateKey; }
-            set { Set(ref _privateKey, value); }
+            get => _privateKey;
+            set => Set(ref _privateKey, value);
         }
 
         [UsedImplicitly]
         public bool IsCaseSensitive
         {
-            get { return _isCaseSensitive; }
-            set { Set(ref _isCaseSensitive, value); }
+            get => _isCaseSensitive;
+            set => Set(ref _isCaseSensitive, value);
         }
 
         [UsedImplicitly]
         public bool IsStartsWith
         {
-            get { return _isStartsWith; }
-            set { Set(ref _isStartsWith, value); }
+            get => _isStartsWith;
+            set => Set(ref _isStartsWith, value);
         }
 
         [UsedImplicitly]
         public bool IsEndsWith
         {
-            get { return _isEndsWith; }
-            set { Set(ref _isEndsWith, value); }
+            get => _isEndsWith;
+            set => Set(ref _isEndsWith, value);
         }
 
         [UsedImplicitly]
         public bool IsBeep
         {
-            get { return _isBeep; }
-            set { Set(ref _isBeep, value); }
+            get => _isBeep;
+            set => Set(ref _isBeep, value);
         }
 
         [UsedImplicitly]
         public string StatusText
         {
-            get { return _statusText; }
-            set { Set(ref _statusText, value); }
+            get => _statusText;
+            set => Set(ref _statusText, value);
         }
 
         public string this[string columnName]
@@ -171,15 +167,18 @@ namespace BitcoinVanityAddressFinder.ViewModel
                                 Error = "Letters and numbers only";
                                 return Error;
                             }
+
                             if (VanityText.Length >= 8)
                             {
                                 Error = "That would take too long";
                                 return Error;
                             }
+
                             if (VanityText.Length > 0 && VanityText.Length < 8)
                             {
                                 return "";
                             }
+
                             return "Error";
                         }
                 }
