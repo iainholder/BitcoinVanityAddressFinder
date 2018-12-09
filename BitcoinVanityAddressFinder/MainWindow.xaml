@@ -34,7 +34,7 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="CheckBox">
-            <Setter Property="Margin" Value="10" />
+            <Setter Property="Margin" Value="10 10 20 10" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="IsEnabled" Value="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}" />
@@ -93,11 +93,11 @@
         <GroupBox Grid.Row="3"
                   Grid.Column="1"
                   Foreground="White"
-                  Header="Rules">
+                  Header="Options">
             <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Case Sensitive?" IsChecked="{Binding IsCaseSensitive}" />
-                <CheckBox Content="Starts With?" IsChecked="{Binding IsStartsWith}" />
-                <CheckBox Content="Ends With?" IsChecked="{Binding IsEndsWith}" />
+                <CheckBox Content="Case Sensitive" IsChecked="{Binding IsCaseSensitive}" />
+                <CheckBox Content="Starts With" IsChecked="{Binding IsStartsWith}" />
+                <CheckBox Content="Ends With" IsChecked="{Binding IsEndsWith}" />
             </StackPanel>
         </GroupBox>
         <!--  End Rules  -->
