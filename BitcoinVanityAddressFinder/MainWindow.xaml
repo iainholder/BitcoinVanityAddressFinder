@@ -34,7 +34,7 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="CheckBox">
-            <Setter Property="Margin" Value="10 10 20 10" />
+            <Setter Property="Margin" Value="10,10,20,10" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="IsEnabled" Value="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}" />
