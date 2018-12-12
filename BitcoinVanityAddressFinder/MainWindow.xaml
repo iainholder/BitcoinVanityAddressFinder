@@ -13,204 +13,204 @@
         FontSize="18"
         ResizeMode="NoResize"
         mc:Ignorable="d">
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:BooleanInverterConverter x:Key="BooleanInverterConverter" />
-        <converters:BooleanToInvertedVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" />
-        <Style TargetType="Label">
-            <Setter Property="Margin" Value="0,0,4,0" />
-            <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Height" Value="22" />
-            <Setter Property="IsReadOnly" Value="True" />
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="CheckBox">
-            <Setter Property="Margin" Value="10,10,20,10" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="IsEnabled" Value="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}" />
-        </Style>
-    </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <!--  Begin Logo  -->
-        <Image Grid.Row="4"
-               Grid.RowSpan="2"
-               Grid.Column="0"
-               Margin="0,0,20,0"
-               Source="bitcoin-logo.png"
-               Stretch="None" />
-        <!--  End Logo  -->
-        <!--  Begin Mode Selector  -->
-        <Label Grid.Row="0"
-               Grid.Column="0"
-               Content="Mode:" />
-        <ComboBox Grid.Row="0"
-                  Grid.Column="1"
-                  Width="400"
-                  Height="30"
-                  Margin="0,4,0,2"
-                  HorizontalAlignment="Left"
-                  IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
-                  ItemsSource="{Binding ModeComboBoxItems}"
-                  SelectedItem="{Binding ModeComboBoxSelectedItem}" />
-        <!--  End Mode Selector  -->
-        <!--  Begin Vanity Text  -->
-        <Label Grid.Row="1"
-               Grid.Column="0"
-               Content="Vanity Text:"
-               Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <TextBox Grid.Row="1"
-                 Grid.Column="1"
-                 Width="400"
-                 Height="30"
-                 Margin="0,2,10,2"
-                 IsReadOnly="{Binding IsSearching}"
-                 Text="{Binding VanityText, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                 Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <!--  End Vanity Text  -->
-        <!--  Begin Dictionary Search  -->
-        <Label Grid.Row="1"
-               Grid.Column="0"
-               Content="Min Word Length:"
-               Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}" />
-        <ComboBox Grid.Row="1"
-                  Grid.Column="1"
-                  Width="400"
-                  Height="30"
-                  Margin="0,4,0,2"
-                  HorizontalAlignment="Left"
-                  IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
-                  ItemsSource="{Binding DictionaryLengthComboBoxItems}"
-                  SelectedItem="{Binding DictionaryLengthComboBoxSelectedItem}"
-                  Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <Label Margin="0"
-                           Padding="0"
-                           Content="{Binding}"
-                           ContentStringFormat="{}{0} letters"
-                           Foreground="Black" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <!--  End Dictionary Search  -->
-        <!--  Begin Address  -->
-        <Label Grid.Row="2"
-               Grid.Column="0"
-               Content="Address:" />
-        <TextBox Grid.Row="2"
-                 Grid.Column="1"
-                 Width="400"
-                 Height="30"
-                 Margin="0,4,0,2"
-                 Text="{Binding Address, FallbackValue='1CCGFQWaExLhs7aRF4RfYB3CTrouserAaP'}" />
-        <!--  End Address  -->
-        <!--  Begin Private Key  -->
-        <Label Grid.Row="3"
-               Grid.Column="0"
-               Content="Private Key:" />
-        <TextBox Grid.Row="3"
-                 Grid.Column="1"
-                 Width="600"
-                 Height="30"
-                 Margin="0,4,10,2"
-                 Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
-        <!--  End Private Key  -->
-        <!--  Begin Options  -->
-        <GroupBox Grid.Row="4"
-                  Grid.Column="1"
-                  Margin="0,0,10,0"
-                  Foreground="White"
-                  Header="Options">
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Case Sensitive" IsChecked="{Binding IsCaseSensitive}" />
-                <CheckBox Content="Starts With" IsChecked="{Binding IsStartsWith}" />
-                <CheckBox Content="Ends With" IsChecked="{Binding IsEndsWith}" />
-            </StackPanel>
-        </GroupBox>
-        <!--  End Options  -->
-        <!--  Begin Settings and Buttons  -->
-        <StackPanel Grid.Row="5"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal">
-            <Label Content="Network:" />
-            <ComboBox Width="100"
-                      Height="30"
-                      Margin="0,10,10,10"
-                      IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
-                      ItemsSource="{Binding NetworkComboBoxItems}"
-                      SelectedItem="{Binding NetworkComboBoxSelectedItem}" />
-            <Label Content="Cores:" />
-            <ComboBox Width="50"
-                      Height="30"
-                      Margin="0,10,10,10"
-                      IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
-                      ItemsSource="{Binding CoreComboBoxItems}"
-                      SelectedItem="{Binding CoreComboBoxSelectedItem}" />
-            <CheckBox Margin="10"
-                      VerticalAlignment="Center"
-                      Content="Beep?"
-                      IsChecked="{Binding IsBeep}" />
-            <!--  Begin Buttons  -->
-            <Button Width="100"
-                    Height="30"
-                    Command="{Binding SearchCommand}"
-                    Content="Search"
-                    IsDefault="True" />
-            <Button Width="100"
-                    Height="30"
-                    Margin="10"
-                    Command="{Binding CancelCommand}"
-                    Content="Cancel"
-                    IsCancel="True" />
-            <!--  End Buttons  -->
-        </StackPanel>
-        <!--  End Settings and Buttons  -->
-        <!--  Begin Status Bar  -->
-        <StackPanel Grid.Row="6"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2">
-            <StatusBar Height="40" VerticalAlignment="Bottom">
-                <StatusBarItem>
-                    <Label Content="{Binding StatusText, FallbackValue='Status here'}" Foreground="Black" />
-                </StatusBarItem>
-                <StatusBarItem HorizontalAlignment="Right">
-                    <ProgressBar Width="205"
-                                 Height="20"
-                                 Margin="0,0,8,0"
-                                 HorizontalAlignment="Right"
-                                 IsIndeterminate="True"
-                                 Orientation="Horizontal"
-                                 Visibility="{Binding IsSearching, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                </StatusBarItem>
-            </StatusBar>
-        </StackPanel>
-        <!--  End Status Bar  -->
-    </Grid>
+  <Window.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:BooleanInverterConverter x:Key="BooleanInverterConverter" />
+    <converters:BooleanToInvertedVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" />
+    <Style TargetType="Label">
+      <Setter Property="Margin" Value="0,0,4,0" />
+      <Setter Property="HorizontalAlignment" Value="Right" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style TargetType="TextBox">
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Height" Value="22" />
+      <Setter Property="IsReadOnly" Value="True" />
+      <Style.Triggers>
+        <Trigger Property="Validation.HasError" Value="true">
+          <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style TargetType="CheckBox">
+      <Setter Property="Margin" Value="10,10,20,10" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="IsEnabled" Value="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}" />
+    </Style>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200" />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <!--  Begin Logo  -->
+    <Image Grid.Row="4"
+           Grid.RowSpan="2"
+           Grid.Column="0"
+           Margin="0,0,20,0"
+           Source="bitcoin-logo.png"
+           Stretch="None" />
+    <!--  End Logo  -->
+    <!--  Begin Mode Selector  -->
+    <Label Grid.Row="0"
+           Grid.Column="0"
+           Content="Mode:" />
+    <ComboBox Grid.Row="0"
+              Grid.Column="1"
+              Width="400"
+              Height="30"
+              Margin="0,4,0,2"
+              HorizontalAlignment="Left"
+              IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
+              ItemsSource="{Binding ModeComboBoxItems}"
+              SelectedItem="{Binding ModeComboBoxSelectedItem}" />
+    <!--  End Mode Selector  -->
+    <!--  Begin Vanity Text  -->
+    <Label Grid.Row="1"
+           Grid.Column="0"
+           Content="Vanity Text:"
+           Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
+    <TextBox Grid.Row="1"
+             Grid.Column="1"
+             Width="400"
+             Height="30"
+             Margin="0,2,10,2"
+             IsReadOnly="{Binding IsSearching}"
+             Text="{Binding VanityText, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+             Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
+    <!--  End Vanity Text  -->
+    <!--  Begin Dictionary Search  -->
+    <Label Grid.Row="1"
+           Grid.Column="0"
+           Content="Min Word Length:"
+           Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}" />
+    <ComboBox Grid.Row="1"
+              Grid.Column="1"
+              Width="400"
+              Height="30"
+              Margin="0,4,0,2"
+              HorizontalAlignment="Left"
+              IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
+              ItemsSource="{Binding DictionaryLengthComboBoxItems}"
+              SelectedItem="{Binding DictionaryLengthComboBoxSelectedItem}"
+              Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <Label Margin="0"
+                 Padding="0"
+                 Content="{Binding}"
+                 ContentStringFormat="{}{0} letters"
+                 Foreground="Black" />
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+    <!--  End Dictionary Search  -->
+    <!--  Begin Address  -->
+    <Label Grid.Row="2"
+           Grid.Column="0"
+           Content="Address:" />
+    <TextBox Grid.Row="2"
+             Grid.Column="1"
+             Width="400"
+             Height="30"
+             Margin="0,4,0,2"
+             Text="{Binding Address, FallbackValue='1CCGFQWaExLhs7aRF4RfYB3CTrouserAaP'}" />
+    <!--  End Address  -->
+    <!--  Begin Private Key  -->
+    <Label Grid.Row="3"
+           Grid.Column="0"
+           Content="Private Key:" />
+    <TextBox Grid.Row="3"
+             Grid.Column="1"
+             Width="600"
+             Height="30"
+             Margin="0,4,10,2"
+             Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
+    <!--  End Private Key  -->
+    <!--  Begin Options  -->
+    <GroupBox Grid.Row="4"
+              Grid.Column="1"
+              Margin="0,0,10,0"
+              Foreground="White"
+              Header="Options">
+      <StackPanel Orientation="Horizontal">
+        <CheckBox Content="Case Sensitive" IsChecked="{Binding IsCaseSensitive}" />
+        <CheckBox Content="Starts With" IsChecked="{Binding IsStartsWith}" />
+        <CheckBox Content="Ends With" IsChecked="{Binding IsEndsWith}" />
+      </StackPanel>
+    </GroupBox>
+    <!--  End Options  -->
+    <!--  Begin Settings and Buttons  -->
+    <StackPanel Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+      <Label Content="Network:" />
+      <ComboBox Width="100"
+                Height="30"
+                Margin="0,10,10,10"
+                IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
+                ItemsSource="{Binding NetworkComboBoxItems}"
+                SelectedItem="{Binding NetworkComboBoxSelectedItem}" />
+      <Label Content="Cores:" />
+      <ComboBox Width="50"
+                Height="30"
+                Margin="0,10,10,10"
+                IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
+                ItemsSource="{Binding CoreComboBoxItems}"
+                SelectedItem="{Binding CoreComboBoxSelectedItem}" />
+      <CheckBox Margin="10"
+                VerticalAlignment="Center"
+                Content="Beep?"
+                IsChecked="{Binding IsBeep}" />
+      <!--  Begin Buttons  -->
+      <Button Width="100"
+              Height="30"
+              Command="{Binding SearchCommand}"
+              Content="Search"
+              IsDefault="True" />
+      <Button Width="100"
+              Height="30"
+              Margin="10"
+              Command="{Binding CancelCommand}"
+              Content="Cancel"
+              IsCancel="True" />
+      <!--  End Buttons  -->
+    </StackPanel>
+    <!--  End Settings and Buttons  -->
+    <!--  Begin Status Bar  -->
+    <StackPanel Grid.Row="6"
+                Grid.Column="0"
+                Grid.ColumnSpan="2">
+      <StatusBar Height="40" VerticalAlignment="Bottom">
+        <StatusBarItem>
+          <Label Content="{Binding StatusText, FallbackValue='Status here'}" Foreground="Black" />
+        </StatusBarItem>
+        <StatusBarItem HorizontalAlignment="Right">
+          <ProgressBar Width="205"
+                       Height="20"
+                       Margin="0,0,8,0"
+                       HorizontalAlignment="Right"
+                       IsIndeterminate="True"
+                       Orientation="Horizontal"
+                       Visibility="{Binding IsSearching, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </StatusBarItem>
+      </StatusBar>
+    </StackPanel>
+    <!--  End Status Bar  -->
+  </Grid>
 </Window>
