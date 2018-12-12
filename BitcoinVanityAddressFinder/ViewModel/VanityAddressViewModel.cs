@@ -298,8 +298,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 }
                 else
                 {
-                    // TODO - Flatten and display inner exceptions
-                    MessageBox.Show(ae.Message);
+                    MessageBox.Show(ae.Flatten().ToString());
                     StatusText = "Error";
                 }
             }
