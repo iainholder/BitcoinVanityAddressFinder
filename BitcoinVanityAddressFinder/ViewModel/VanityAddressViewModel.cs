@@ -256,9 +256,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
         private async void Search()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             Address = "";
             PrivateKey = "";
             StatusText = $"Searching using {CoreComboBoxSelectedItem} cores";
@@ -269,6 +266,9 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             try
             {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
                 var result = await new VanityAddressService().Search(
                     CoreComboBoxSelectedItem,
                     ModeComboBoxSelectedItem,
@@ -280,10 +280,12 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     NetworkComboBoxSelectedItem,
                     ct);
 
+                stopwatch.Stop();
+
                 var vanityPrivateKey = result.PrivateKey;
                 Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
                 PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                StatusText = $"Completed after {result.AttemptCount} attempts in {stopwatch.Elapsed.Milliseconds}ms ({(float)result.AttemptCount / stopwatch.ElapsedMilliseconds:N3} attempts per ms)";
+                StatusText = $"Completed after {result.AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({result.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
 
                 if (IsBeep)
                 {
