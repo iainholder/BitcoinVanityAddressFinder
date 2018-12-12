@@ -1,13 +1,13 @@
 # BitcoinVanityAddressFinder
 Windows (WPF) application to find vanity bitcoin addresses using NBitcoin.
 
-'Vanity addresses are valid bitcoin addresses that contain human-readable messages. For example, 
+>Vanity addresses are valid bitcoin addresses that contain human-readable messages. For example, 
 1LoveBPzzD72PUXLzCkYAtGFYmK5vYNR33 is a valid address that contains the letters forming the word "Love" 
 as the first four Base-58 letters. Vanity addresses require generating and testing billions of candidate 
 private keys, until a bitcoin address with the desired pattern is found. Although there are some optimizations
 in the vanity generation algorithm, the process essentially involves picking a private key at random, deriving
 the public key, deriving the bitcoin address, and checking to see if it matches the desired vanity pattern, 
-repeating billions of times until a match is found.' 
+repeating billions of times until a match is found.
 
 -- Andreas M. Antonopolous, Mastering Bitcoin, O'Reilly
 
