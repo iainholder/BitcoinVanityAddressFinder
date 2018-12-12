@@ -126,12 +126,13 @@
                  Grid.Column="1"
                  Width="600"
                  Height="30"
-                 Margin="0,4,0,2"
+                 Margin="0,4,10,2"
                  Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
         <!--  End Private Key  -->
-        <!--  Begin Rules  -->
+        <!--  Begin Options  -->
         <GroupBox Grid.Row="4"
                   Grid.Column="1"
+                  Margin="0,0,10,0"
                   Foreground="White"
                   Header="Options">
             <StackPanel Orientation="Horizontal">
@@ -140,7 +141,7 @@
                 <CheckBox Content="Ends With" IsChecked="{Binding IsEndsWith}" />
             </StackPanel>
         </GroupBox>
-        <!--  End Rules  -->
+        <!--  End Options  -->
         <!--  Begin Settings and Buttons  -->
         <StackPanel Grid.Row="5"
                     Grid.Column="0"
