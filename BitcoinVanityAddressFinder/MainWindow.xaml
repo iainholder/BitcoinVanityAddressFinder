@@ -45,6 +45,7 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="200" />
       <ColumnDefinition />
+      <ColumnDefinition Width="180" />
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -126,14 +127,26 @@
            Content="Private Key:" />
     <TextBox Grid.Row="3"
              Grid.Column="1"
+             Grid.ColumnSpan="2"
              Width="600"
              Height="30"
              Margin="0,4,10,2"
              Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
     <!--  End Private Key  -->
+    <!--  Begin Counter  -->
+    <Label Grid.Row="1"
+           Grid.Column="2"
+           HorizontalAlignment="Center"
+           Content="Keys tried:" />
+    <Label Grid.Row="2"
+           Grid.Column="2"
+           HorizontalAlignment="Center"
+           Content="{Binding AttemptCount, FallbackValue=123456789}" />
+    <!--  End Counter  -->
     <!--  Begin Options  -->
     <GroupBox Grid.Row="4"
               Grid.Column="1"
+              Grid.ColumnSpan="2"
               Margin="0,0,10,0"
               Foreground="White"
               Header="Options">
@@ -147,7 +160,7 @@
     <!--  Begin Settings and Buttons  -->
     <StackPanel Grid.Row="5"
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
@@ -188,7 +201,7 @@
     <!--  Begin Status Bar  -->
     <StackPanel Grid.Row="6"
                 Grid.Column="0"
-                Grid.ColumnSpan="2">
+                Grid.ColumnSpan="3">
       <StatusBar Height="40" VerticalAlignment="Bottom">
         <StatusBarItem>
           <Label Content="{Binding StatusText, FallbackValue='Status here'}" Foreground="Black" />

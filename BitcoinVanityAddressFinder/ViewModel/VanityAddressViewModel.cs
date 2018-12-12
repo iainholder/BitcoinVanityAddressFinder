@@ -38,6 +38,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         private string _privateKey;
         private string _statusText;
         private string _vanityText;
+        private int _attemptCount;
 
         public VanityAddressViewModel()
         {
@@ -200,6 +201,13 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set => Set(ref _statusText, value);
         }
 
+        [UsedImplicitly]
+        public int AttemptCount
+        {
+            get => _attemptCount;
+            set => Set(ref _attemptCount,value);
+        }
+
         public string this[string columnName]
         {
             get
@@ -259,9 +267,11 @@ namespace BitcoinVanityAddressFinder.ViewModel
         {
             Address = "";
             PrivateKey = "";
+            StatusText = $"Searching using {CoreComboBoxSelectedItem} cores.";
             IsSearching = true;
+            AttemptCount = 0;
 
-            Messenger.Default.Register<AttemptCountMessage>(this, o => { StatusText = $"Searching using {CoreComboBoxSelectedItem} cores. {o.AttemptCount} keys tried."; });
+            Messenger.Default.Register<AttemptCountMessage>(this, o => { AttemptCount = o.AttemptCount; });
 
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
@@ -287,6 +297,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 var vanityPrivateKey = result.PrivateKey;
                 Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
                 PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
+                AttemptCount = result.AttemptCount;
                 StatusText = $"Completed after {result.AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({result.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
 
                 if (IsBeep)
