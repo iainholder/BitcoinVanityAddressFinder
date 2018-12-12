@@ -12,12 +12,6 @@ using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.Services
 {
-    public class VanityAddressResult
-    {
-        public int AttemptCount { get; set; }
-        public Key PrivateKey { get; set; }
-    }
-
     public class AttemptCountMessage
     {
         public int AttemptCount { get; set; }
@@ -27,7 +21,7 @@ namespace BitcoinVanityAddressFinder.Services
     {
         private int _attemptCount;
 
-        public Task<VanityAddressResult> Search(
+        public Task<Key> Search(
             int cores,
             SearchMode searchMode,
             string vanityText,
@@ -100,7 +94,9 @@ namespace BitcoinVanityAddressFinder.Services
 
                 dispatcherTimer.Stop();
 
-                return new VanityAddressResult { AttemptCount = _attemptCount, PrivateKey = resultResult };
+                Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount });
+
+                return resultResult;
             }, ct);
         }
 

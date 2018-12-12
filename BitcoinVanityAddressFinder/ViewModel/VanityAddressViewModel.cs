@@ -294,11 +294,10 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
                 stopwatch.Stop();
 
-                var vanityPrivateKey = result.PrivateKey;
+                var vanityPrivateKey = result;
                 Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
                 PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                AttemptCount = result.AttemptCount;
-                StatusText = $"Completed after {result.AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({result.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
+                StatusText = $"Completed after {AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
 
                 if (IsBeep)
                 {
