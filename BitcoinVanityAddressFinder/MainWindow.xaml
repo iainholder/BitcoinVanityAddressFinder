@@ -105,7 +105,17 @@
                   IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
                   ItemsSource="{Binding DictionaryLengthComboBoxItems}"
                   SelectedItem="{Binding DictionaryLengthComboBoxSelectedItem}"
-                  Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}" />
+                  Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Margin="0"
+                           Padding="0"
+                           Content="{Binding}"
+                           ContentStringFormat="{}{0} letters"
+                           Foreground="Black" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <!--  End Dictionary Search  -->
         <!--  Begin Address  -->
         <Label Grid.Row="2"
