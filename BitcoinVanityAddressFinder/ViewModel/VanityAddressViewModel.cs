@@ -261,7 +261,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             Address = "";
             PrivateKey = "";
-            StatusText = $"Using {CoreComboBoxSelectedItem} cores";
+            StatusText = $"Searching using {CoreComboBoxSelectedItem} cores";
             IsSearching = true;
 
             _cancellationTokenSource = new CancellationTokenSource();
@@ -283,7 +283,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 var vanityPrivateKey = result.PrivateKey;
                 Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
                 PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                StatusText = $"{result.AttemptCount} attempts in {stopwatch.Elapsed:g} ({(float)result.AttemptCount / stopwatch.ElapsedMilliseconds:N3}/ms)";
+                StatusText = $"Completed after {result.AttemptCount} attempts in {stopwatch.Elapsed.Milliseconds}ms ({(float)result.AttemptCount / stopwatch.ElapsedMilliseconds:N3} attempts per ms)";
 
                 if (IsBeep)
                 {
@@ -294,7 +294,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             {
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    StatusText = "Cancelled";
+                    StatusText = "Search cancelled";
                 }
                 else
                 {
