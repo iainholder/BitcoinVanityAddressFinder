@@ -55,14 +55,6 @@
       <RowDefinition />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <!--  Begin Logo  -->
-    <Image Grid.Row="4"
-           Grid.RowSpan="2"
-           Grid.Column="0"
-           Margin="0,0,20,0"
-           Source="bitcoin-logo.png"
-           Stretch="None" />
-    <!--  End Logo  -->
     <!--  Begin Mode Selector  -->
     <Label Grid.Row="0"
            Grid.Column="0"
@@ -212,5 +204,47 @@
       </StatusBar>
     </StackPanel>
     <!--  End Status Bar  -->
+    <!--  Begin Logo  -->
+    <Image Grid.Row="4"
+           Grid.RowSpan="2"
+           Grid.Column="0"
+           Margin="0,0,0,0"
+           Source="bitcoin-logo.png"
+           Stretch="None">
+      <Image.RenderTransform>
+        <RotateTransform CenterX="37" CenterY="37" />
+      </Image.RenderTransform>
+      <Image.Style>
+        <Style>
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding IsSearching}" Value="True">
+              <DataTrigger.EnterActions>
+                <BeginStoryboard>
+                  <Storyboard>
+                    <DoubleAnimation RepeatBehavior="Forever"
+                                     Storyboard.TargetProperty="RenderTransform.Angle"
+                                     From="0"
+                                     To="360"
+                                     Duration="0:0:1" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.EnterActions>
+              <DataTrigger.ExitActions>
+                <BeginStoryboard>
+                  <Storyboard>
+                    <DoubleAnimation RepeatBehavior="Forever"
+                                     Storyboard.TargetProperty="RenderTransform.Angle"
+                                     From="0"
+                                     To="0"
+                                     Duration="0" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.ExitActions>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </Image.Style>
+    </Image>
+    <!--  End Logo  -->
   </Grid>
 </Window>
