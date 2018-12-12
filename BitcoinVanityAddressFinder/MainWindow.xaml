@@ -55,6 +55,14 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <!--  Begin Logo  -->
+        <Image Grid.Row="4"
+               Grid.RowSpan="2"
+               Grid.Column="0"
+               Margin="0,0,20,0"
+               Source="bitcoin-logo.png"
+               Stretch="None" />
+        <!--  End Logo  -->
         <!--  Begin Mode Selector  -->
         <Label Grid.Row="0"
                Grid.Column="0"
