@@ -9,7 +9,7 @@
         Height="360"
         Background="#222222"
         DataContext="{Binding VanityAddressViewModel, Source={StaticResource Locator}}"
-        FontFamily="Consolas"
+        FontFamily="Tahoma"
         FontSize="18"
         ResizeMode="NoResize"
         mc:Ignorable="d">
