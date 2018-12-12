@@ -4,7 +4,6 @@ TODO
 Override max string length
 Estimated compute time.
 Highlight matching text section  
-Dictionary search
 
 DONE
 ===============================================================================
@@ -23,6 +22,7 @@ Attempts display - done - in status bar
 Play a sound when finished option - done
 Number of cores selector (override to max?) - done
 TestNet support - done
+Dictionary search - done
 
 NOT DOING
 ===============================================================================
