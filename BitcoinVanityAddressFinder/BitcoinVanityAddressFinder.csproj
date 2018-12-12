@@ -90,6 +90,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanInverterConverter.cs" />
+    <Compile Include="Converters\BooleanToInvertedVisibilityConverter.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\VanityAddressService.cs" />
@@ -140,6 +141,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Services\Dictionary.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

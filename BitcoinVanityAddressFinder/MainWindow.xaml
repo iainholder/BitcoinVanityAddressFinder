@@ -6,16 +6,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="Vanity Bitcoin Address Generator"
         Width="800"
-        Height="350"
+        Height="360"
         Background="#222222"
         DataContext="{Binding VanityAddressViewModel, Source={StaticResource Locator}}"
         FontFamily="Consolas"
-        FontSize="20"
+        FontSize="18"
         ResizeMode="NoResize"
         mc:Ignorable="d">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:BooleanInverterConverter x:Key="BooleanInverterConverter" />
+        <converters:BooleanToInvertedVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" />
         <Style TargetType="Label">
             <Setter Property="Margin" Value="0,0,4,0" />
             <Setter Property="HorizontalAlignment" Value="Right" />
@@ -42,10 +43,11 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -53,25 +55,55 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!--  Begin Vanity Text  -->
+        <!--  Begin Mode Selector  -->
         <Label Grid.Row="0"
                Grid.Column="0"
-               Content="Vanity Text:" />
-        <StackPanel Grid.Row="0"
-                    Grid.Column="1"
-                    Orientation="Horizontal">
-            <TextBox Width="400"
-                     Height="30"
-                     Margin="0,2,10,2"
-                     IsReadOnly="{Binding IsSearching}"
-                     Text="{Binding VanityText, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
-        <!--  End Vanity Text  -->
-        <!--  Begin Address  -->
+               Content="Mode:" />
+        <ComboBox Grid.Row="0"
+                  Grid.Column="1"
+                  Width="400"
+                  Height="30"
+                  Margin="0,4,0,2"
+                  HorizontalAlignment="Left"
+                  IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
+                  ItemsSource="{Binding ModeComboBoxItems}"
+                  SelectedItem="{Binding ModeComboBoxSelectedItem}" />
+        <!--  End Mode Selector  -->
+        <!--  Begin Vanity Text  -->
         <Label Grid.Row="1"
                Grid.Column="0"
-               Content="Address:" />
+               Content="Vanity Text:"
+               Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <TextBox Grid.Row="1"
+                 Grid.Column="1"
+                 Width="400"
+                 Height="30"
+                 Margin="0,2,10,2"
+                 IsReadOnly="{Binding IsSearching}"
+                 Text="{Binding VanityText, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                 Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <!--  End Vanity Text  -->
+        <!--  Begin Dictionary Search  -->
+        <Label Grid.Row="1"
+               Grid.Column="0"
+               Content="Min Word Length:"
+               Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}" />
+        <ComboBox Grid.Row="1"
+                  Grid.Column="1"
+                  Width="400"
+                  Height="30"
+                  Margin="0,4,0,2"
+                  HorizontalAlignment="Left"
+                  IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
+                  ItemsSource="{Binding DictionaryLengthComboBoxItems}"
+                  SelectedItem="{Binding DictionaryLengthComboBoxSelectedItem}"
+                  Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToInvertedVisibilityConverter}}" />
+        <!--  End Dictionary Search  -->
+        <!--  Begin Address  -->
+        <Label Grid.Row="2"
+               Grid.Column="0"
+               Content="Address:" />
+        <TextBox Grid.Row="2"
                  Grid.Column="1"
                  Width="400"
                  Height="30"
@@ -79,10 +111,10 @@
                  Text="{Binding Address, FallbackValue='1CCGFQWaExLhs7aRF4RfYB3CTrouserAaP'}" />
         <!--  End Address  -->
         <!--  Begin Private Key  -->
-        <Label Grid.Row="2"
+        <Label Grid.Row="3"
                Grid.Column="0"
                Content="Private Key:" />
-        <TextBox Grid.Row="2"
+        <TextBox Grid.Row="3"
                  Grid.Column="1"
                  Width="600"
                  Height="30"
@@ -90,7 +122,7 @@
                  Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
         <!--  End Private Key  -->
         <!--  Begin Rules  -->
-        <GroupBox Grid.Row="3"
+        <GroupBox Grid.Row="4"
                   Grid.Column="1"
                   Foreground="White"
                   Header="Options">
@@ -102,7 +134,7 @@
         </GroupBox>
         <!--  End Rules  -->
         <!--  Begin Settings and Buttons  -->
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="5"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Right"
@@ -142,7 +174,7 @@
         </StackPanel>
         <!--  End Settings and Buttons  -->
         <!--  Begin Status Bar  -->
-        <StackPanel Grid.Row="5"
+        <StackPanel Grid.Row="6"
                     Grid.Column="0"
                     Grid.ColumnSpan="2">
             <StatusBar Height="40" VerticalAlignment="Bottom">

@@ -14,17 +14,25 @@ using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.ViewModel
 {
+    public enum SearchMode
+    {
+        String,
+        Dictionary
+    }
+
     public sealed class VanityAddressViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _address;
 
         private CancellationTokenSource _cancellationTokenSource;
         private int _coreComboBoxSelectedItem;
+        private int _dictionaryLengthComboBoxSelectedItem;
         private bool _isBeep;
         private bool _isCaseSensitive;
         private bool _isEndsWith;
         private bool _isSearching;
         private bool _isStartsWith;
+        private SearchMode _modeComboBoxSelectedItem;
         private Network _networkComboBoxSelectedItem;
         private string _privateKey;
         private string _statusText;
@@ -38,6 +46,12 @@ namespace BitcoinVanityAddressFinder.ViewModel
             VanityText = "";
             IsCaseSensitive = true;
 
+            ModeComboBoxItems = new[] { SearchMode.String, SearchMode.Dictionary };
+            ModeComboBoxSelectedItem = SearchMode.String;
+
+            DictionaryLengthComboBoxItems = Enumerable.Range(3, 5);
+            DictionaryLengthComboBoxSelectedItem = 3;
+
             NetworkComboBoxItems = new[] { Network.Main, Network.TestNet, Network.RegTest };
             NetworkComboBoxSelectedItem = Network.Main;
 
@@ -45,7 +59,35 @@ namespace BitcoinVanityAddressFinder.ViewModel
             CoreComboBoxSelectedItem = Environment.ProcessorCount - 1;
         }
 
-        [UsedImplicitly] public IEnumerable<Network> NetworkComboBoxItems { get; set; }
+        [UsedImplicitly]
+        public IEnumerable<int> DictionaryLengthComboBoxItems { get; set; }
+
+        [UsedImplicitly]
+        public int DictionaryLengthComboBoxSelectedItem
+        {
+            get => _dictionaryLengthComboBoxSelectedItem;
+            set => Set(ref _dictionaryLengthComboBoxSelectedItem, value);
+        }
+
+        [UsedImplicitly]
+        public IEnumerable<SearchMode> ModeComboBoxItems { get; set; }
+
+        [UsedImplicitly]
+        public SearchMode ModeComboBoxSelectedItem
+        {
+            get => _modeComboBoxSelectedItem;
+            set
+            {
+                Set(ref _modeComboBoxSelectedItem, value);
+                RaisePropertyChanged(nameof(IsStringSearchMode));
+            }
+        }
+
+        [UsedImplicitly]
+        public bool IsStringSearchMode => ModeComboBoxSelectedItem == SearchMode.String;
+
+        [UsedImplicitly]
+        public IEnumerable<Network> NetworkComboBoxItems { get; set; }
 
         [UsedImplicitly]
         public Network NetworkComboBoxSelectedItem
@@ -54,7 +96,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set => Set(ref _networkComboBoxSelectedItem, value);
         }
 
-        [UsedImplicitly] public IEnumerable<int> CoreComboBoxItems { get; set; }
+        [UsedImplicitly]
+        public IEnumerable<int> CoreComboBoxItems { get; set; }
 
         [UsedImplicitly]
         public int CoreComboBoxSelectedItem
@@ -87,9 +130,11 @@ namespace BitcoinVanityAddressFinder.ViewModel
             }
         }
 
-        [UsedImplicitly] public RelayCommand SearchCommand { get; set; }
+        [UsedImplicitly]
+        public RelayCommand SearchCommand { get; set; }
 
-        [UsedImplicitly] public RelayCommand CancelCommand { get; set; }
+        [UsedImplicitly]
+        public RelayCommand CancelCommand { get; set; }
 
         [UsedImplicitly]
         public string VanityText
@@ -191,7 +236,12 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
         private bool CanExecuteSearch()
         {
-            return this[nameof(VanityText)] == "" && !_isSearching;
+            if (IsStringSearchMode)
+            {
+                return this[nameof(VanityText)] == "" && !_isSearching;
+            }
+
+            return !_isSearching;
         }
 
         private void Cancel()
@@ -221,7 +271,9 @@ namespace BitcoinVanityAddressFinder.ViewModel
             {
                 var result = await new VanityAddressService().Search(
                     CoreComboBoxSelectedItem,
+                    ModeComboBoxSelectedItem,
                     VanityText,
+                    DictionaryLengthComboBoxSelectedItem,
                     IsCaseSensitive,
                     IsStartsWith,
                     IsEndsWith,
