@@ -168,7 +168,8 @@
       <CheckBox Margin="10"
                 VerticalAlignment="Center"
                 Content="Beep?"
-                IsChecked="{Binding IsBeep}" />
+                IsChecked="{Binding IsBeep}"
+                IsEnabled="True" />
       <!--  Begin Buttons  -->
       <Button Width="100"
               Height="30"
@@ -225,7 +226,7 @@
                                      Storyboard.TargetProperty="RenderTransform.Angle"
                                      From="0"
                                      To="360"
-                                     Duration="0:0:1" />
+                                     Duration="0:0:2" />
                   </Storyboard>
                 </BeginStoryboard>
               </DataTrigger.EnterActions>

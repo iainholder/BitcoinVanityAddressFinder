@@ -10,6 +10,7 @@ using BitcoinVanityAddressFinder.Annotations;
 using BitcoinVanityAddressFinder.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.ViewModel
@@ -258,8 +259,9 @@ namespace BitcoinVanityAddressFinder.ViewModel
         {
             Address = "";
             PrivateKey = "";
-            StatusText = $"Searching using {CoreComboBoxSelectedItem} cores";
             IsSearching = true;
+
+            Messenger.Default.Register<AttemptCountMessage>(this, o => { StatusText = $"Searching using {CoreComboBoxSelectedItem} cores. {o.AttemptCount} keys tried."; });
 
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;

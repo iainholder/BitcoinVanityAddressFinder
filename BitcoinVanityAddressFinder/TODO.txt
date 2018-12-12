@@ -4,6 +4,7 @@ TODO
 Override max string length
 Estimated compute time.
 Highlight matching text section  
+Attempt counter (live updating) (use MVVMLight message?)
 
 DONE
 ===============================================================================

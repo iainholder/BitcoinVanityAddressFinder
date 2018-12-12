@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using BitcoinVanityAddressFinder.ViewModel;
+using GalaSoft.MvvmLight.Messaging;
 using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.Services
@@ -14,6 +16,11 @@ namespace BitcoinVanityAddressFinder.Services
     {
         public int AttemptCount { get; set; }
         public Key PrivateKey { get; set; }
+    }
+
+    public class AttemptCountMessage
+    {
+        public int AttemptCount { get; set; }
     }
 
     public class VanityAddressService
@@ -31,10 +38,15 @@ namespace BitcoinVanityAddressFinder.Services
             Network network,
             CancellationToken ct)
         {
+            _attemptCount = 0;
+
+            var dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += (sender, args) => Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount });
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
+
             return Task.Factory.StartNew(() =>
             {
-                _attemptCount = 0;
-
                 var tasks = new List<Task<Key>>();
 
                 for (int i = 0; i < cores; i++)
@@ -85,6 +97,9 @@ namespace BitcoinVanityAddressFinder.Services
                 }
 
                 var resultResult = Task.WhenAny(tasks.ToArray()).Result.Result;
+
+                dispatcherTimer.Stop();
+
                 return new VanityAddressResult { AttemptCount = _attemptCount, PrivateKey = resultResult };
             }, ct);
         }
