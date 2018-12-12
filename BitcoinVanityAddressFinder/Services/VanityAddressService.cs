@@ -63,10 +63,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.Dictionary)
                         {
-                            // TODO - Compile this in
-                            Dictionary<string, string> dictionary = GetDictionary(minWordLength);
-
-                            string mainNetAddress = "";
+                            var dictionary = GetDictionary(minWordLength);
 
                             while (!IsDictionaryWordAddress(address, dictionary, isCaseSensitive, isStartsWith, isEndsWith))
                             {
@@ -92,10 +89,10 @@ namespace BitcoinVanityAddressFinder.Services
             }, ct);
         }
 
-        private Dictionary<string, string> GetDictionary(int minWordLength)
+        private static Dictionary<string, string> GetDictionary(int minWordLength)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var dictionaryTxt = "BitcoinVanityAddressFinder.Services.Dictionary.txt";
+            const string dictionaryTxt = "BitcoinVanityAddressFinder.Services.Dictionary.txt";
 
             using (var stream = assembly.GetManifestResourceStream(dictionaryTxt))
             {
@@ -107,7 +104,6 @@ namespace BitcoinVanityAddressFinder.Services
                     return result
                         .Where(o => o.Length >= minWordLength)
                         .ToDictionary(o => o);
-                    ;
                 }
             }
         }
@@ -186,24 +182,20 @@ namespace BitcoinVanityAddressFinder.Services
                 if (isStartsWith && isEndsWith)
                 {
                     return dictionary.Any(o => address.Remove(0, 1).StartsWith(o.Key)) && dictionary.Any(o => address.Remove(0, 1).EndsWith(o.Key));
-                    //return address.Remove(0, 1).StartsWith(vanityText) && address.EndsWith(vanityText);
                 }
 
                 if (isStartsWith)
                 {
                     return dictionary.Any(o => address.Remove(0, 1).StartsWith(o.Key));
-                    // return address.Remove(0, 1).StartsWith(vanityText);
                 }
 
                 if (isEndsWith)
                 {
                     return dictionary.Any(o => address.EndsWith(o.Key));
-                    // return address.EndsWith(vanityText);
                 }
                 else
                 {
                     return dictionary.Any(o => address.Contains(o.Key));
-                    // return address.Contains(vanityText);
                 }
             }
             else
@@ -211,24 +203,20 @@ namespace BitcoinVanityAddressFinder.Services
                 if (isStartsWith && isEndsWith)
                 {
                     return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.Key.ToUpper())) && dictionary.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.Key.ToUpper()));
-                    // return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper()) && address.ToUpper().EndsWith(vanityText.ToUpper());
                 }
 
                 if (isStartsWith)
                 {
                     return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.Key.ToUpper()));
-                    // return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper());
                 }
 
                 if (isEndsWith)
                 {
                     return dictionary.Any(o => address.ToUpper().EndsWith(o.Key.ToUpper()));
-                    //return address.ToUpper().EndsWith(vanityText.ToUpper());
                 }
                 else
                 {
                     return dictionary.Any(o => address.ToUpper().Contains(o.Key.ToUpper()));
-                    // return address.ToUpper().Contains(vanityText.ToUpper());
                 }
             }
         }
