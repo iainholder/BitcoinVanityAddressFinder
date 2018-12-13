@@ -24,6 +24,9 @@ namespace BitcoinVanityAddressFinder.ViewModel
     public sealed class VanityAddressViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _address;
+        private int _attemptCount;
+
+        private string _attemptCountMessageTokenGuid = "";
 
         private CancellationTokenSource _cancellationTokenSource;
         private int _coreComboBoxSelectedItem;
@@ -38,7 +41,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
         private string _privateKey;
         private string _statusText;
         private string _vanityText;
-        private int _attemptCount;
 
         public VanityAddressViewModel()
         {
@@ -59,8 +61,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             CoreComboBoxItems = Enumerable.Range(1, Environment.ProcessorCount);
             CoreComboBoxSelectedItem = Environment.ProcessorCount - 1;
-
-            Messenger.Default.Register<AttemptCountMessage>(this, o => { AttemptCount = o.AttemptCount; });
         }
 
         [UsedImplicitly]
@@ -207,7 +207,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public int AttemptCount
         {
             get => _attemptCount;
-            set => Set(ref _attemptCount,value);
+            set => Set(ref _attemptCount, value);
         }
 
         public string this[string columnName]
@@ -272,6 +272,15 @@ namespace BitcoinVanityAddressFinder.ViewModel
             StatusText = $"Searching using {CoreComboBoxSelectedItem} cores.";
             IsSearching = true;
             AttemptCount = 0;
+            _attemptCountMessageTokenGuid = Guid.NewGuid().ToString();
+
+            Messenger.Default.Register<AttemptCountMessage>(this, o =>
+            {
+                if (o.AttemptCountMessageTokenGuid.Equals(_attemptCountMessageTokenGuid))
+                {
+                    AttemptCount = o.AttemptCount;
+                }
+            });
 
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
@@ -290,6 +299,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     IsStartsWith,
                     IsEndsWith,
                     NetworkComboBoxSelectedItem,
+                    _attemptCountMessageTokenGuid,
                     ct);
 
                 stopwatch.Stop();

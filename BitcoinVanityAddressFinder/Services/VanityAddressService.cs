@@ -15,6 +15,9 @@ namespace BitcoinVanityAddressFinder.Services
     public class AttemptCountMessage
     {
         public int AttemptCount { get; set; }
+
+        // TODO - This is almost certainly not the correct way to do this.
+        public string AttemptCountMessageTokenGuid { get; set; }
     }
 
     public class VanityAddressService
@@ -30,12 +33,13 @@ namespace BitcoinVanityAddressFinder.Services
             bool isStartsWith,
             bool isEndsWith,
             Network network,
+            string attemptCountMessageTokenGuid,
             CancellationToken ct)
         {
             _attemptCount = 0;
 
             var dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += (sender, args) => Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount });
+            dispatcherTimer.Tick += (sender, args) => Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount, AttemptCountMessageTokenGuid = attemptCountMessageTokenGuid });
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
 
@@ -94,7 +98,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                 dispatcherTimer.Stop();
 
-                Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount });
+                Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount, AttemptCountMessageTokenGuid = attemptCountMessageTokenGuid });
 
                 return resultResult;
             }, ct);
