@@ -148,31 +148,26 @@ namespace BitcoinVanityAddressFinder.Services
                 {
                     return address.EndsWith(vanityText);
                 }
-                else
-                {
-                    return address.Contains(vanityText);
-                }
-            }
-            else
-            {
-                if (isStartsWith && isEndsWith)
-                {
-                    return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper()) && address.ToUpper().EndsWith(vanityText.ToUpper());
-                }
 
-                else if (isStartsWith)
-                {
-                    return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper());
-                }
-                else if (isEndsWith)
-                {
-                    return address.ToUpper().EndsWith(vanityText.ToUpper());
-                }
-                else
-                {
-                    return address.ToUpper().Contains(vanityText.ToUpper());
-                }
+                return address.Contains(vanityText);
             }
+
+            if (isStartsWith && isEndsWith)
+            {
+                return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper()) && address.ToUpper().EndsWith(vanityText.ToUpper());
+            }
+
+            if (isStartsWith)
+            {
+                return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper());
+            }
+
+            if (isEndsWith)
+            {
+                return address.ToUpper().EndsWith(vanityText.ToUpper());
+            }
+
+            return address.ToUpper().Contains(vanityText.ToUpper());
         }
 
         public static bool IsDictionaryWordAddress(
@@ -204,32 +199,26 @@ namespace BitcoinVanityAddressFinder.Services
                 {
                     return dictionary.Any(o => address.EndsWith(o.Key));
                 }
-                else
-                {
-                    return dictionary.Any(o => address.Contains(o.Key));
-                }
+
+                return dictionary.Any(o => address.Contains(o.Key));
             }
-            else
+
+            if (isStartsWith && isEndsWith)
             {
-                if (isStartsWith && isEndsWith)
-                {
-                    return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.Key.ToUpper())) && dictionary.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.Key.ToUpper()));
-                }
-
-                if (isStartsWith)
-                {
-                    return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.Key.ToUpper()));
-                }
-
-                if (isEndsWith)
-                {
-                    return dictionary.Any(o => address.ToUpper().EndsWith(o.Key.ToUpper()));
-                }
-                else
-                {
-                    return dictionary.Any(o => address.ToUpper().Contains(o.Key.ToUpper()));
-                }
+                return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.Key.ToUpper())) && dictionary.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.Key.ToUpper()));
             }
+
+            if (isStartsWith)
+            {
+                return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.Key.ToUpper()));
+            }
+
+            if (isEndsWith)
+            {
+                return dictionary.Any(o => address.ToUpper().EndsWith(o.Key.ToUpper()));
+            }
+
+            return dictionary.Any(o => address.ToUpper().Contains(o.Key.ToUpper()));
         }
     }
 }
