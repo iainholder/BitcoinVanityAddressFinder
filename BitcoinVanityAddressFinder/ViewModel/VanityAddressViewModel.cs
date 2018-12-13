@@ -269,16 +269,19 @@ namespace BitcoinVanityAddressFinder.ViewModel
         {
             Address = "";
             PrivateKey = "";
-            StatusText = $"Searching using {CoreComboBoxSelectedItem} cores.";
             IsSearching = true;
+            StatusText = $"[00:00:00] Searching using {CoreComboBoxSelectedItem} cores...";
             AttemptCount = 0;
             _attemptCountMessageTokenGuid = Guid.NewGuid().ToString();
+
+            var stopwatch = new Stopwatch();
 
             Messenger.Default.Register<AttemptCountMessage>(this, o =>
             {
                 if (o.AttemptCountMessageTokenGuid.Equals(_attemptCountMessageTokenGuid))
                 {
                     AttemptCount = o.AttemptCount;
+                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {CoreComboBoxSelectedItem} cores at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
                 }
             });
 
@@ -289,7 +292,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
             {
                 try
                 {
-                    var stopwatch = new Stopwatch();
                     stopwatch.Start();
 
                     var result = await vanityAddressService.Search(
@@ -309,7 +311,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     var vanityPrivateKey = result;
                     Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
                     PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                    StatusText = $"Completed after {AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
+                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after trying {AttemptCount} keys ({AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
 
                     if (IsBeep)
                     {
@@ -320,18 +322,20 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 {
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
-                        StatusText = "Search cancelled";
+                        StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Search cancelled";
                     }
                     else
                     {
                         MessageBox.Show(ae.Flatten().ToString());
-                        StatusText = "Error";
+                        StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Error";
                     }
                 }
                 finally
                 {
-                    _cancellationTokenSource.Dispose();
+                    stopwatch.Stop();
+                    _attemptCountMessageTokenGuid = string.Empty;
                     IsSearching = false;
+                    _cancellationTokenSource.Dispose();
                     SearchCommand.RaiseCanExecuteChanged();
                 }
             }
