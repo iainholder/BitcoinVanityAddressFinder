@@ -20,9 +20,14 @@ namespace BitcoinVanityAddressFinder.Services
         public string AttemptCountMessageTokenGuid { get; set; }
     }
 
-    public class VanityAddressService
+    public class VanityAddressService : IDisposable
     {
         private int _attemptCount;
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
 
         public Task<Key> Search(
             int cores,

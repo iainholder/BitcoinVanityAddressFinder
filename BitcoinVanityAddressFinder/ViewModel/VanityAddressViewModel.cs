@@ -285,52 +285,55 @@ namespace BitcoinVanityAddressFinder.ViewModel
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
 
-            try
+            using (var vanityAddressService = new VanityAddressService())
             {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                var result = await new VanityAddressService().Search(
-                    CoreComboBoxSelectedItem,
-                    ModeComboBoxSelectedItem,
-                    VanityText,
-                    DictionaryLengthComboBoxSelectedItem,
-                    IsCaseSensitive,
-                    IsStartsWith,
-                    IsEndsWith,
-                    NetworkComboBoxSelectedItem,
-                    _attemptCountMessageTokenGuid,
-                    ct);
-
-                stopwatch.Stop();
-
-                var vanityPrivateKey = result;
-                Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
-                PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                StatusText = $"Completed after {AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
-
-                if (IsBeep)
+                try
                 {
-                    Console.Beep(808, 303);
+                    var stopwatch = new Stopwatch();
+                    stopwatch.Start();
+
+                    var result = await vanityAddressService.Search(
+                        CoreComboBoxSelectedItem,
+                        ModeComboBoxSelectedItem,
+                        VanityText,
+                        DictionaryLengthComboBoxSelectedItem,
+                        IsCaseSensitive,
+                        IsStartsWith,
+                        IsEndsWith,
+                        NetworkComboBoxSelectedItem,
+                        _attemptCountMessageTokenGuid,
+                        ct);
+
+                    stopwatch.Stop();
+
+                    var vanityPrivateKey = result;
+                    Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
+                    PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
+                    StatusText = $"Completed after {AttemptCount} attempts in {stopwatch.Elapsed.TotalSeconds:N3} seconds ({AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
+
+                    if (IsBeep)
+                    {
+                        Console.Beep(808, 303);
+                    }
                 }
-            }
-            catch (AggregateException ae)
-            {
-                if (_cancellationTokenSource.IsCancellationRequested)
+                catch (AggregateException ae)
                 {
-                    StatusText = "Search cancelled";
+                    if (_cancellationTokenSource.IsCancellationRequested)
+                    {
+                        StatusText = "Search cancelled";
+                    }
+                    else
+                    {
+                        MessageBox.Show(ae.Flatten().ToString());
+                        StatusText = "Error";
+                    }
                 }
-                else
+                finally
                 {
-                    MessageBox.Show(ae.Flatten().ToString());
-                    StatusText = "Error";
+                    _cancellationTokenSource.Dispose();
+                    IsSearching = false;
+                    SearchCommand.RaiseCanExecuteChanged();
                 }
-            }
-            finally
-            {
-                _cancellationTokenSource.Dispose();
-                IsSearching = false;
-                SearchCommand.RaiseCanExecuteChanged();
             }
         }
     }
