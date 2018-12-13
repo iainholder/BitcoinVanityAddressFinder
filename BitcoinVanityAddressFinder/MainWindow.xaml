@@ -143,7 +143,8 @@
            HorizontalAlignment="Center"
            Content="{Binding AttemptCount, FallbackValue=123456789}"
            FontFamily="Consolas"
-           FontSize="24" />
+           FontSize="20"
+           FontWeight="Bold" />
     <!--  End Counter  -->
     <!--  Begin Options  -->
     <GroupBox Grid.Row="4"
@@ -228,7 +229,7 @@
            Source="bitcoin-logo.png"
            Stretch="None">
       <Image.RenderTransform>
-        <RotateTransform CenterX="37" CenterY="37" />
+        <RotateTransform CenterX="40" CenterY="40" />
       </Image.RenderTransform>
       <Image.Style>
         <Style>
