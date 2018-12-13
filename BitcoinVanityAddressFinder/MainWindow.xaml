@@ -133,11 +133,11 @@
              Margin="0,4,10,2"
              Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
     <!--  End Private Key  -->
-    <!--  Begin Counter  -->
+    <!--  Begin Keys Searched  -->
     <GroupBox Grid.Row="1"
               Grid.RowSpan="2"
               Grid.Column="2"
-              Margin="0,0,10,0"
+              Margin="0,0,10,2"
               Foreground="White"
               Header="Keys searched">
       <Label HorizontalAlignment="Center"
@@ -146,7 +146,7 @@
              FontSize="24"
              FontWeight="Bold" />
     </GroupBox>
-    <!--  End Counter  -->
+    <!--  End Keys Searched  -->
     <!--  Begin Options  -->
     <GroupBox Grid.Row="4"
               Grid.Column="1"
