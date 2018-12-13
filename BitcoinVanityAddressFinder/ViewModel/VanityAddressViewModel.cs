@@ -270,7 +270,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
             Address = "";
             PrivateKey = "";
             IsSearching = true;
-            StatusText = $"[00:00:00] Searching using {CoreComboBoxSelectedItem} cores...";
+            string s = CoreComboBoxSelectedItem == 1 ? "" : "s";
+            StatusText = $"[00:00:00] Searching using {CoreComboBoxSelectedItem} core{s}...";
             AttemptCount = 0;
             _attemptCountMessageTokenGuid = Guid.NewGuid().ToString();
 
@@ -281,7 +282,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 if (o.AttemptCountMessageTokenGuid.Equals(_attemptCountMessageTokenGuid))
                 {
                     AttemptCount = o.AttemptCount;
-                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {CoreComboBoxSelectedItem} cores at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
+                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {CoreComboBoxSelectedItem} core{s} at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
                 }
             });
 
@@ -311,7 +312,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     var vanityPrivateKey = result;
                     Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
                     PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after trying {AttemptCount} keys ({AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} attempts per second)";
+                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after searching {AttemptCount} keys at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second.";
 
                     if (IsBeep)
                     {

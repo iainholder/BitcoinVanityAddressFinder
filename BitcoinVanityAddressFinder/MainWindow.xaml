@@ -134,17 +134,18 @@
              Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
     <!--  End Private Key  -->
     <!--  Begin Counter  -->
-    <Label Grid.Row="1"
-           Grid.Column="2"
-           HorizontalAlignment="Center"
-           Content="Keys tried:" />
-    <Label Grid.Row="2"
-           Grid.Column="2"
-           HorizontalAlignment="Center"
-           Content="{Binding AttemptCount, FallbackValue=123456789}"
-           FontFamily="Consolas"
-           FontSize="20"
-           FontWeight="Bold" />
+    <GroupBox Grid.Row="1"
+              Grid.RowSpan="2"
+              Grid.Column="2"
+              Margin="0,0,10,0"
+              Foreground="White"
+              Header="Keys searched">
+      <Label HorizontalAlignment="Center"
+             Content="{Binding AttemptCount, FallbackValue=123456789}"
+             FontFamily="Consolas"
+             FontSize="24"
+             FontWeight="Bold" />
+    </GroupBox>
     <!--  End Counter  -->
     <!--  Begin Options  -->
     <GroupBox Grid.Row="4"
@@ -183,7 +184,7 @@
                 SelectedItem="{Binding CoreComboBoxSelectedItem}" />
       <CheckBox Margin="10"
                 VerticalAlignment="Center"
-                Content="Beep?"
+                Content="Beep"
                 IsChecked="{Binding IsBeep}"
                 IsEnabled="True" />
       <!--  Begin Buttons  -->
