@@ -336,6 +336,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     stopwatch.Stop();
                     _attemptCountMessageTokenGuid = string.Empty;
                     IsSearching = false;
+                    _cancellationTokenSource.Cancel();
                     _cancellationTokenSource.Dispose();
                     SearchCommand.RaiseCanExecuteChanged();
                 }
