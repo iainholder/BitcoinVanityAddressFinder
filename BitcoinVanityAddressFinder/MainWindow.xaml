@@ -141,7 +141,9 @@
     <Label Grid.Row="2"
            Grid.Column="2"
            HorizontalAlignment="Center"
-           Content="{Binding AttemptCount, FallbackValue=123456789}" />
+           Content="{Binding AttemptCount, FallbackValue=123456789}"
+           FontFamily="Consolas"
+           FontSize="24" />
     <!--  End Counter  -->
     <!--  Begin Options  -->
     <GroupBox Grid.Row="4"
