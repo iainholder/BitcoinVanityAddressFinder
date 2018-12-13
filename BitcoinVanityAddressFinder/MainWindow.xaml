@@ -79,7 +79,7 @@
              Grid.Column="1"
              Width="400"
              Height="30"
-             Margin="0,2,10,2"
+             Margin="0,4,0,2"
              IsReadOnly="{Binding IsSearching}"
              Text="{Binding VanityText, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
              Visibility="{Binding IsStringSearchMode, Converter={StaticResource BooleanToVisibilityConverter}}" />

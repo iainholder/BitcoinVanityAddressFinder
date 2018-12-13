@@ -59,6 +59,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             CoreComboBoxItems = Enumerable.Range(1, Environment.ProcessorCount);
             CoreComboBoxSelectedItem = Environment.ProcessorCount - 1;
+
+            Messenger.Default.Register<AttemptCountMessage>(this, o => { AttemptCount = o.AttemptCount; });
         }
 
         [UsedImplicitly]
@@ -270,8 +272,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
             StatusText = $"Searching using {CoreComboBoxSelectedItem} cores.";
             IsSearching = true;
             AttemptCount = 0;
-
-            Messenger.Default.Register<AttemptCountMessage>(this, o => { AttemptCount = o.AttemptCount; });
 
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
