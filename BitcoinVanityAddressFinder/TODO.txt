@@ -6,6 +6,9 @@ Estimated compute time.
 Highlight matching text section
 Check disposal (dispatcher etc)
 Check exceptions
+GPU calc
+Alternative threading model - data flow mesh
+Extract code from NBitcoin
 
 DONE
 ===============================================================================
