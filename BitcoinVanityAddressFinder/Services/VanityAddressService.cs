@@ -16,7 +16,6 @@ namespace BitcoinVanityAddressFinder.Services
     {
         public int AttemptCount { get; set; }
 
-        // TODO - This is almost certainly not the correct way to do this.
         public string AttemptCountMessageTokenGuid { get; set; }
     }
 
@@ -192,7 +191,6 @@ namespace BitcoinVanityAddressFinder.Services
             bool isStartsWith,
             bool isEndsWith)
         {
-            // TODO - Get the actual length
             if (address.Length < 3)
             {
                 return false;
