@@ -12,13 +12,6 @@ using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.Services
 {
-    public class AttemptCountMessage
-    {
-        public int AttemptCount { get; set; }
-
-        public string AttemptCountMessageTokenGuid { get; set; }
-    }
-
     public class VanityAddressService : IDisposable
     {
         private int _attemptCount;
@@ -43,7 +36,7 @@ namespace BitcoinVanityAddressFinder.Services
             _attemptCount = 0;
 
             var dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += (sender, args) => SendAttemptCountMessage(attemptCountMessageTokenGuid);
+            dispatcherTimer.Tick += (sender, args) => Messenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
 
@@ -102,15 +95,10 @@ namespace BitcoinVanityAddressFinder.Services
 
                 dispatcherTimer.Stop();
 
-                SendAttemptCountMessage(attemptCountMessageTokenGuid);
+                Messenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
 
                 return resultResult;
             }, ct);
-        }
-
-        private void SendAttemptCountMessage(string attemptCountMessageTokenGuid)
-        {
-            Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount, AttemptCountMessageTokenGuid = attemptCountMessageTokenGuid });
         }
 
         private static HashSet<string> GetWordsHashSet(int minWordLength)

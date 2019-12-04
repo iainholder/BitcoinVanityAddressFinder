@@ -277,13 +277,11 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             var stopwatch = new Stopwatch();
 
-            Messenger.Default.Register<AttemptCountMessage>(this, o =>
+            Messenger.Default.Register<int>(this, _attemptCountMessageTokenGuid, o =>
             {
-                if (o.AttemptCountMessageTokenGuid.Equals(_attemptCountMessageTokenGuid))
-                {
-                    AttemptCount = o.AttemptCount;
+                    AttemptCount = o;
                     StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {CoreComboBoxSelectedItem} core{s} at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
-                }
+                
             });
 
             _cancellationTokenSource = new CancellationTokenSource();
