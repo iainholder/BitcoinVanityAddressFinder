@@ -53,7 +53,9 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.String)
                         {
-                            while (!IsVanityAddress(address, vanityText, isCaseSensitive, isStartsWith, isEndsWith))
+                            var vanityAddressChecker = new VanityAddressChecker(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
+
+                            while (!vanityAddressChecker.IsVanityAddress(address))
                             {
                                 if (ct.IsCancellationRequested)
                                 {
@@ -121,56 +123,7 @@ namespace BitcoinVanityAddressFinder.Services
             }
         }
 
-        public static bool IsVanityAddress(
-            string address,
-            string vanityText,
-            bool isCaseSensitive,
-            bool isStartsWith,
-            bool isEndsWith)
-        {
-            // TODO - Get the actual length
-            if (address.Length < 3)
-            {
-                return false;
-            }
 
-            if (isCaseSensitive)
-            {
-                if (isStartsWith && isEndsWith)
-                {
-                    return address.Remove(0, 1).StartsWith(vanityText) && address.EndsWith(vanityText);
-                }
-
-                if (isStartsWith)
-                {
-                    return address.Remove(0, 1).StartsWith(vanityText);
-                }
-
-                if (isEndsWith)
-                {
-                    return address.EndsWith(vanityText);
-                }
-
-                return address.Contains(vanityText);
-            }
-
-            if (isStartsWith && isEndsWith)
-            {
-                return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper()) && address.ToUpper().EndsWith(vanityText.ToUpper());
-            }
-
-            if (isStartsWith)
-            {
-                return address.Remove(0, 1).ToUpper().StartsWith(vanityText.ToUpper());
-            }
-
-            if (isEndsWith)
-            {
-                return address.ToUpper().EndsWith(vanityText.ToUpper());
-            }
-
-            return address.ToUpper().Contains(vanityText.ToUpper());
-        }
 
         public static bool IsDictionaryWordAddress(
             string address,
