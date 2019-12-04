@@ -113,8 +113,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 {
                     if (MessageBox.Show($"You should leave one core for Windows and other running processes.{Environment.NewLine}If you are sure you want to use all your CPU cores and understand the implications, press OK. Otherwise press Cancel to default to {Environment.ProcessorCount - 1}.", "Cores", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
                     {
-                        // HACK
-                        Task.Factory.StartNew(() =>
+                        // HACK - God I hate this. Find out issue and remove
+                        Task.Run(() =>
                         {
                             Thread.Sleep(100);
                             CoreComboBoxSelectedItem = Environment.ProcessorCount - 1;

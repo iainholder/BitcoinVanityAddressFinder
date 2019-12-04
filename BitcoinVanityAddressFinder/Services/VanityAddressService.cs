@@ -47,13 +47,13 @@ namespace BitcoinVanityAddressFinder.Services
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
 
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
             {
                 var tasks = new List<Task<Key>>();
 
                 for (int i = 0; i < cores; i++)
                 {
-                    tasks.Add(Task.Factory.StartNew(() =>
+                    tasks.Add(Task.Run(() =>
                     {
                         string address = "";
                         Key privateKey = null;
