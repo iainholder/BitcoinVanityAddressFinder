@@ -77,9 +77,9 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.Dictionary)
                         {
-                            var hashSet = GetHashSet(minWordLength);
+                            var words = GetWordsHashSet(minWordLength);
 
-                            while (!IsDictionaryWordAddress(address, hashSet, isCaseSensitive, isStartsWith, isEndsWith))
+                            while (!IsDictionaryWordAddress(address, words, isCaseSensitive, isStartsWith, isEndsWith))
                             {
                                 if (ct.IsCancellationRequested)
                                 {
@@ -113,7 +113,7 @@ namespace BitcoinVanityAddressFinder.Services
             Messenger.Default.Send(new AttemptCountMessage { AttemptCount = _attemptCount, AttemptCountMessageTokenGuid = attemptCountMessageTokenGuid });
         }
 
-        private static HashSet<string> GetHashSet(int minWordLength)
+        private static HashSet<string> GetWordsHashSet(int minWordLength)
         {
             var assembly = Assembly.GetExecutingAssembly();
             const string dictionaryTxt = "BitcoinVanityAddressFinder.Services.Dictionary.txt";
@@ -186,7 +186,7 @@ namespace BitcoinVanityAddressFinder.Services
 
         public static bool IsDictionaryWordAddress(
             string address,
-            HashSet<string> dictionary,
+            HashSet<string> words,
             bool isCaseSensitive,
             bool isStartsWith,
             bool isEndsWith)
@@ -200,38 +200,38 @@ namespace BitcoinVanityAddressFinder.Services
             {
                 if (isStartsWith && isEndsWith)
                 {
-                    return dictionary.Any(o => address.Remove(0, 1).StartsWith(o)) && dictionary.Any(o => address.Remove(0, 1).EndsWith(o));
+                    return words.Any(o => address.Remove(0, 1).StartsWith(o)) && words.Any(o => address.Remove(0, 1).EndsWith(o));
                 }
 
                 if (isStartsWith)
                 {
-                    return dictionary.Any(o => address.Remove(0, 1).StartsWith(o));
+                    return words.Any(o => address.Remove(0, 1).StartsWith(o));
                 }
 
                 if (isEndsWith)
                 {
-                    return dictionary.Any(address.EndsWith);
+                    return words.Any(address.EndsWith);
                 }
 
-                return dictionary.Any(address.Contains);
+                return words.Any(address.Contains);
             }
 
             if (isStartsWith && isEndsWith)
             {
-                return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper())) && dictionary.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.ToUpper()));
+                return words.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper())) && words.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.ToUpper()));
             }
 
             if (isStartsWith)
             {
-                return dictionary.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper()));
+                return words.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper()));
             }
 
             if (isEndsWith)
             {
-                return dictionary.Any(o => address.ToUpper().EndsWith(o.ToUpper()));
+                return words.Any(o => address.ToUpper().EndsWith(o.ToUpper()));
             }
 
-            return dictionary.Any(o => address.ToUpper().Contains(o.ToUpper()));
+            return words.Any(o => address.ToUpper().Contains(o.ToUpper()));
         }
     }
 }
