@@ -59,7 +59,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                                 privateKey = new Key();
 
-                                address = privateKey.PubKey.GetAddress(network).ToString();
+                                address = privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
 
                                 Interlocked.Increment(ref _attemptCount);
                             }
@@ -85,7 +85,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                                 privateKey = new Key();
 
-                                address = privateKey.PubKey.GetAddress(network).ToString();
+                                address = privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
 
                                 Interlocked.Increment(ref _attemptCount);
                             }

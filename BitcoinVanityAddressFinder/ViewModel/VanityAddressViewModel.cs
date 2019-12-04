@@ -307,7 +307,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     stopwatch.Stop();
 
                     var vanityPrivateKey = result;
-                    Address = vanityPrivateKey?.PubKey.GetAddress(NetworkComboBoxSelectedItem).ToString();
+                    Address = vanityPrivateKey?.PubKey.GetAddress(ScriptPubKeyType.Legacy, NetworkComboBoxSelectedItem).ToString();
                     PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
                     StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after searching {AttemptCount} keys at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second.";
 
