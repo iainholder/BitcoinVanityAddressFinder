@@ -16,11 +16,6 @@ namespace BitcoinVanityAddressFinder.Services
     {
         private int _attemptCount;
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-
         public Task<Key> Search(
             int cores,
             SearchMode searchMode,
@@ -72,8 +67,10 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.Dictionary)
                         {
-                            // Getting a new set of words for each thread is probably overkill as reading HashSet should be threadsafe.
-                            // Options are 1. Leave it in. 2. Use single hash set to save a little memory.
+                            // Getting a new set of words for each thread is probably overkill as reading HashSet should be thread safe.
+                            // Options are:
+                            // 1. Leave it in.
+                            // 2. Use single hash set to save a little memory.
                             // 3. Use immutable hashset for confirmed thread safety and 2.
                             var words = GetWordsHashSet(minWordLength);
 
@@ -118,14 +115,19 @@ namespace BitcoinVanityAddressFinder.Services
                 // TODO - Improve handling of this exception
                 using (var reader = new StreamReader(stream ?? throw new InvalidOperationException("Dictionary not found.")))
                 {
-                    var result = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    var words = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-                    return result
+                    return words
                         .Where(o => o.Length >= minWordLength)
                         .Distinct()
                         .ToHashSet();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }

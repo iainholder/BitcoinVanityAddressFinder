@@ -281,7 +281,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
             {
                     AttemptCount = o;
                     StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {CoreComboBoxSelectedItem} core{s} at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
-                
             });
 
             _cancellationTokenSource = new CancellationTokenSource();
