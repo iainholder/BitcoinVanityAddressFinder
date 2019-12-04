@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace BitcoinVanityAddressFinder.Services
+﻿namespace BitcoinVanityAddressFinder.Services
 {
     public class VanityAddressChecker
     {
