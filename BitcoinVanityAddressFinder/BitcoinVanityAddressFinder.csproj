@@ -147,6 +147,7 @@
     <Compile Include="Converters\BooleanToInvertedVisibilityConverter.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Services\DictionaryWordChecker.cs" />
     <Compile Include="Services\VanityAddressChecker.cs" />
     <Compile Include="Services\VanityAddressService.cs" />
     <Compile Include="Tests\VanityAddressServiceTests.cs" />

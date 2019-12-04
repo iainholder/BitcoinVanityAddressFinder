@@ -72,9 +72,14 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.Dictionary)
                         {
+                            // Getting a new set of words for each thread is probably overkill as reading HashSet should be threadsafe.
+                            // Options are 1. Leave it in. 2. Use single hash set to save a little memory.
+                            // 3. Use immutable hashset for confirmed thread safety and 2.
                             var words = GetWordsHashSet(minWordLength);
 
-                            while (!IsDictionaryWordAddress(address, words, isCaseSensitive, isStartsWith, isEndsWith))
+                            var dictionaryWordChecker = new DictionaryWordChecker(words, isCaseSensitive, isStartsWith, isEndsWith);
+
+                            while (!dictionaryWordChecker.IsDictionaryWordAddress(address))
                             {
                                 if (ct.IsCancellationRequested)
                                 {
@@ -121,58 +126,6 @@ namespace BitcoinVanityAddressFinder.Services
                         .ToHashSet();
                 }
             }
-        }
-
-
-
-        public static bool IsDictionaryWordAddress(
-            string address,
-            HashSet<string> words,
-            bool isCaseSensitive,
-            bool isStartsWith,
-            bool isEndsWith)
-        {
-            if (address.Length < 3)
-            {
-                return false;
-            }
-
-            if (isCaseSensitive)
-            {
-                if (isStartsWith && isEndsWith)
-                {
-                    return words.Any(o => address.Remove(0, 1).StartsWith(o)) && words.Any(o => address.Remove(0, 1).EndsWith(o));
-                }
-
-                if (isStartsWith)
-                {
-                    return words.Any(o => address.Remove(0, 1).StartsWith(o));
-                }
-
-                if (isEndsWith)
-                {
-                    return words.Any(address.EndsWith);
-                }
-
-                return words.Any(address.Contains);
-            }
-
-            if (isStartsWith && isEndsWith)
-            {
-                return words.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper())) && words.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.ToUpper()));
-            }
-
-            if (isStartsWith)
-            {
-                return words.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper()));
-            }
-
-            if (isEndsWith)
-            {
-                return words.Any(o => address.ToUpper().EndsWith(o.ToUpper()));
-            }
-
-            return words.Any(o => address.ToUpper().Contains(o.ToUpper()));
         }
     }
 }
