@@ -48,9 +48,9 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.String)
                         {
-                            var vanityAddressChecker = new VanityAddressChecker(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
+                            var inputStringVerifier = new InputStringVerifier(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
 
-                            while (!vanityAddressChecker.IsVanityAddress(address))
+                            while (!inputStringVerifier.IsVanityAddress(address))
                             {
                                 if (ct.IsCancellationRequested)
                                 {
@@ -74,9 +74,9 @@ namespace BitcoinVanityAddressFinder.Services
                             // 3. Use immutable hashset for confirmed thread safety and 2.
                             var words = GetWordsHashSet(minWordLength);
 
-                            var dictionaryWordChecker = new DictionaryWordChecker(words, isCaseSensitive, isStartsWith, isEndsWith);
+                            var dictionaryWordVerifier = new DictionaryWordVerifier(words, isCaseSensitive, isStartsWith, isEndsWith);
 
-                            while (!dictionaryWordChecker.IsDictionaryWordAddress(address))
+                            while (!dictionaryWordVerifier.IsDictionaryWordAddress(address))
                             {
                                 if (ct.IsCancellationRequested)
                                 {

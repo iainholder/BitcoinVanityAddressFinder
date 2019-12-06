@@ -147,10 +147,11 @@
     <Compile Include="Converters\BooleanToInvertedVisibilityConverter.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Services\DictionaryWordChecker.cs" />
-    <Compile Include="Services\VanityAddressChecker.cs" />
+    <Compile Include="Services\DictionaryWordVerifier.cs" />
+    <Compile Include="Services\InputStringVerifier.cs" />
     <Compile Include="Services\VanityAddressService.cs" />
-    <Compile Include="Tests\VanityAddressServiceTests.cs" />
+    <Compile Include="Tests\DictionaryWordVerifierTests.cs" />
+    <Compile Include="Tests\InputStringVerifierTests.cs" />
     <Compile Include="ViewModel\VanityAddressViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
