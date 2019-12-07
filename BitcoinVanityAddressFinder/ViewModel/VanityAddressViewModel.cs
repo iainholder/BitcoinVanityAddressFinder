@@ -332,7 +332,6 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 {
                     stopwatch.Stop();
                     Messenger.Default.Unregister<int>(this, _attemptCountMessageTokenGuid);
-                   _attemptCountMessageTokenGuid = string.Empty;
                     IsSearching = false;
                     _cancellationTokenSource.Cancel();
                     _cancellationTokenSource.Dispose();
