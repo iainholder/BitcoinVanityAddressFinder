@@ -14,6 +14,7 @@ namespace BitcoinVanityAddressFinder.Services
 {
     public class VanityAddressService : IDisposable
     {
+        private static SemaphoreSlim _semaphore;
         private int _attemptCount;
 
         public Task<Key> Search(
@@ -29,6 +30,7 @@ namespace BitcoinVanityAddressFinder.Services
             CancellationToken ct)
         {
             _attemptCount = 0;
+            _semaphore = new SemaphoreSlim(cores, cores);
 
             var dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (sender, args) => Messenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
@@ -43,6 +45,8 @@ namespace BitcoinVanityAddressFinder.Services
                 {
                     tasks.Add(Task.Run(() =>
                     {
+                        _semaphore.Wait(ct);
+
                         string address = "";
                         Key privateKey = null;
 
@@ -90,6 +94,8 @@ namespace BitcoinVanityAddressFinder.Services
                                 Interlocked.Increment(ref _attemptCount);
                             }
                         }
+
+                        _semaphore.Release();
 
                         return privateKey;
                     }, ct));
