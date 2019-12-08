@@ -155,9 +155,15 @@
               Foreground="White"
               Header="Options">
       <StackPanel Orientation="Horizontal">
-        <CheckBox Content="Case Sensitive" IsChecked="{Binding IsCaseSensitive}" />
-        <CheckBox Content="Starts With" IsChecked="{Binding IsStartsWith}" />
-        <CheckBox Content="Ends With" IsChecked="{Binding IsEndsWith}" />
+        <CheckBox VerticalContentAlignment="Center"
+                  Content="Case Sensitive"
+                  IsChecked="{Binding IsCaseSensitive}" />
+        <CheckBox VerticalContentAlignment="Center"
+                  Content="Starts With"
+                  IsChecked="{Binding IsStartsWith}" />
+        <CheckBox VerticalContentAlignment="Center"
+                  Content="Ends With"
+                  IsChecked="{Binding IsEndsWith}" />
       </StackPanel>
     </GroupBox>
     <!--  End Options  -->
@@ -175,15 +181,16 @@
                 IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
                 ItemsSource="{Binding NetworkComboBoxItems}"
                 SelectedItem="{Binding NetworkComboBoxSelectedItem}" />
-      <Label Content="Cores:" />
+      <Label Content="Threads:" />
       <ComboBox Width="50"
                 Height="30"
                 Margin="0,10,10,10"
                 IsEnabled="{Binding IsSearching, Converter={StaticResource BooleanInverterConverter}}"
                 ItemsSource="{Binding CoreComboBoxItems}"
                 SelectedItem="{Binding CoreComboBoxSelectedItem}" />
-      <CheckBox Margin="10"
+      <CheckBox Margin="10,10,20,10"
                 VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
                 Content="Beep"
                 IsChecked="{Binding IsBeep}"
                 IsEnabled="True" />
