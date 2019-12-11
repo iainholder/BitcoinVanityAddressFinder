@@ -13,6 +13,8 @@
 */
 
 // using GalaSoft.MvvmLight;
+
+using BitcoinVanityAddressFinder.Services;
 using GalaSoft.MvvmLight.Ioc;
 using CommonServiceLocator;
 
@@ -43,6 +45,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             ////}
 
             SimpleIoc.Default.Register<VanityAddressViewModel>();
+            SimpleIoc.Default.Register<IServiceFactory, ServiceFactory>();
         }
 
         public VanityAddressViewModel VanityAddressViewModel => ServiceLocator.Current.GetInstance<VanityAddressViewModel>();

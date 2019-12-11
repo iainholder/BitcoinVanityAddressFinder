@@ -149,6 +149,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DictionaryWordVerifier.cs" />
     <Compile Include="Services\InputStringVerifier.cs" />
+    <Compile Include="Services\ServiceFactory.cs" />
     <Compile Include="Services\VanityAddressService.cs" />
     <Compile Include="Tests\DictionaryWordVerifierTests.cs" />
     <Compile Include="Tests\InputStringVerifierTests.cs" />

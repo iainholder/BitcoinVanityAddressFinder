@@ -23,6 +23,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
     public sealed class VanityAddressViewModel : ViewModelBase, IDataErrorInfo
     {
+        private readonly IServiceFactory _serviceFactory;
+
         private string _address;
         private int _attemptCount;
 
@@ -42,8 +44,10 @@ namespace BitcoinVanityAddressFinder.ViewModel
         private string _statusText;
         private string _vanityText;
 
-        public VanityAddressViewModel()
+        public VanityAddressViewModel(IServiceFactory serviceFactory)
         {
+            _serviceFactory = serviceFactory;
+
             SearchCommand = new RelayCommand(Search, CanExecuteSearch);
             CancelCommand = new RelayCommand(Cancel, CanCancel);
 
@@ -286,7 +290,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
 
-            using (var vanityAddressService = new VanityAddressService())
+            using (var vanityAddressService = _serviceFactory.GetVanityAddressService())
             {
                 try
                 {
