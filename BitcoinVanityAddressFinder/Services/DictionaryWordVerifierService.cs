@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BitcoinVanityAddressFinder.Services
 {
-    public class DictionaryWordVerifier
+    public class DictionaryWordVerifierService
     {
         private readonly object _lock = new object();
         private readonly HashSet<string> _words;
@@ -11,7 +11,7 @@ namespace BitcoinVanityAddressFinder.Services
         private readonly bool _isStartsWith;
         private readonly bool _isEndsWith;
 
-        public DictionaryWordVerifier(
+        public DictionaryWordVerifierService(
             HashSet<string> words,
             bool isCaseSensitive,
             bool isStartsWith,

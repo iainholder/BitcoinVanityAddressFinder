@@ -14,8 +14,14 @@ namespace BitcoinVanityAddressFinder.Services
 {
     public class VanityAddressService : IDisposable
     {
+        private readonly IServiceFactory _serviceFactory;
         private static SemaphoreSlim _semaphore;
         private int _attemptCount;
+
+        public VanityAddressService(IServiceFactory serviceFactory)
+        {
+            _serviceFactory = serviceFactory;
+        }
 
         public Task<Key> Search(
             int cores,
@@ -52,7 +58,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.String)
                         {
-                            var inputStringVerifier = new InputStringVerifier(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
+                            var inputStringVerifier = _serviceFactory.GetInputStringVerifierService(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
 
                             while (!inputStringVerifier.IsVanityAddress(address))
                             {
@@ -78,7 +84,7 @@ namespace BitcoinVanityAddressFinder.Services
                             // 3. Use immutable hashset for confirmed thread safety and 2.
                             var words = GetWordsHashSet(minWordLength);
 
-                            var dictionaryWordVerifier = new DictionaryWordVerifier(words, isCaseSensitive, isStartsWith, isEndsWith);
+                            var dictionaryWordVerifier = _serviceFactory.GetDictionaryWordVerifierService(words, isCaseSensitive, isStartsWith, isEndsWith);
 
                             while (!dictionaryWordVerifier.IsDictionaryWordAddress(address))
                             {

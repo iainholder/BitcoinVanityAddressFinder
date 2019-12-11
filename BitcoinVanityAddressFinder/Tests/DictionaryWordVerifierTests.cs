@@ -14,7 +14,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "XXX1")]
         public void IsDictionaryWordAddress_WhenNotContains_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, false, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, false, false);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -24,7 +24,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("XXXXXXXXXXXXXXXXXXXXX1XXXXXXXXXXX1", "XXX1;YYY2;ZZZ2")]
         public void IsDictionaryWordAddress_WhenContains_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, false, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, false, false);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -34,7 +34,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("XXXXXXXXXXXXXXXXXXXXX1XXXXXXXXXXX1", "xXX1")]
         public void IsDictionaryWordAddress_WhenNotCaseSensitive_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, false, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, false, false);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -44,7 +44,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("XXXXXXXXXXXXXXXXXXXXX1XXXXXXXXXXX1", "xXX1")]
         public void IsDictionaryWordAddress_WhenCaseSensitive_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, false, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, false, false);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -52,7 +52,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1XXXX11111111111111111111111111111", "xxxx")]
         public void IsDictionaryWordAddress_WhenStartsWith_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, true, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, true, false);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -60,7 +60,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("111111111111111111111111111111xxxx", "xxxx")]
         public void IsDictionaryWordAddress_WhenStartsWith_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, true, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, true, false);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -68,7 +68,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1XXXX1111111111111111111111111XXXX", "xxxx")]
         public void IsDictionaryWordAddress_WhenEndsWith_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, false, true);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, false, true);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -78,7 +78,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("XXXXXXXXXXXXXXXXXXXXX1XXXXXXXXXXX1", "XXX1")]
         public void IsDictionaryWordAddress_WhenContainsAndCaseSensitive_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), false, false, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), false, false, false);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -90,7 +90,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1", "XXX1")]
         public void IsDictionaryWordAddress_WhenContainsAndCaseSensitive_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, false, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, false, false);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -98,7 +98,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1xxxx11111111111111111111111111111", "xxxx")]
         public void IsDictionaryWordAddress_WhenStartsWithAndCaseSensitive_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, true, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, true, false);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -106,7 +106,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1XXXX11111111111111111111111111111", "xxxx")]
         public void IsDictionaryWordAddress_WhenStartsWithAndCaseSensitive_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, true, false);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, true, false);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -114,7 +114,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("111111111111111111111111111111xxxx", "xxxx")]
         public void IsDictionaryWordAddress_WhenEndsWithAndCaseSensitive_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, false, true);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, false, true);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -122,7 +122,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1XXXX1111111111111111111111111XXXX", "xxxx")]
         public void IsDictionaryWordAddress_WhenEndsWithAndCaseSensitive_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, false, true);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, false, true);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -130,7 +130,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1xxxx1111111111111111111111111xxxx", "xxxx")]
         public void IsDictionaryWordAddress_WhenStartsWithAndEndsWithAndCaseSensitive_Match(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, true, true);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, true, true);
             Assert.IsTrue(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 
@@ -138,7 +138,7 @@ namespace BitcoinVanityAddressFinder.Tests
         [TestCase("1xxxx1111111111111111111111111XXXX", "xxxx")]
         public void IsDictionaryWordAddress_WhenStartsWithAndEndsWithAndCaseSensitive_DontMatch(string address, string input)
         {
-            var dictionaryWordVerifier = new DictionaryWordVerifier(InputStringToHashSet(input), true, true, true);
+            var dictionaryWordVerifier = new DictionaryWordVerifierService(InputStringToHashSet(input), true, true, true);
             Assert.IsFalse(dictionaryWordVerifier.IsDictionaryWordAddress(address));
         }
 

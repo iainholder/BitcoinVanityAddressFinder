@@ -1,6 +1,6 @@
 ﻿namespace BitcoinVanityAddressFinder.Services
 {
-    public class InputStringVerifier
+    public class InputStringVerifierService
     {
         private readonly object _lock = new object();
         private readonly string _vanityText;
@@ -8,7 +8,7 @@
         private readonly bool _isStartsWith;
         private readonly bool _isEndsWith;
 
-        public InputStringVerifier(
+        public InputStringVerifierService(
             string vanityText,
             bool isCaseSensitive,
             bool isStartsWith,
