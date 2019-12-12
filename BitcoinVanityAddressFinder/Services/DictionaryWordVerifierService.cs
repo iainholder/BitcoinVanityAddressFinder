@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BitcoinVanityAddressFinder.Services
@@ -37,12 +38,13 @@ namespace BitcoinVanityAddressFinder.Services
                 {
                     if (_isStartsWith && _isEndsWith)
                     {
-                        return _words.Any(o => address.Remove(0, 1).StartsWith(o)) && _words.Any(o => address.Remove(0, 1).EndsWith(o));
+                        return _words.Any(o => address.Remove(0, 1).StartsWith(o, StringComparison.InvariantCulture)) 
+                               && _words.Any(o => address.Remove(0, 1).EndsWith(o, StringComparison.InvariantCulture));
                     }
 
                     if (_isStartsWith)
                     {
-                        return _words.Any(o => address.Remove(0, 1).StartsWith(o));
+                        return _words.Any(o => address.Remove(0, 1).StartsWith(o, StringComparison.InvariantCulture));
                     }
 
                     if (_isEndsWith)
@@ -55,17 +57,18 @@ namespace BitcoinVanityAddressFinder.Services
 
                 if (_isStartsWith && _isEndsWith)
                 {
-                    return _words.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper())) && _words.Any(o => address.Remove(0, 1).ToUpper().EndsWith(o.ToUpper()));
+                    return _words.Any(o => address.Remove(0, 1).StartsWith(o, StringComparison.InvariantCultureIgnoreCase)) 
+                           && _words.Any(o => address.Remove(0, 1).EndsWith(o, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (_isStartsWith)
                 {
-                    return _words.Any(o => address.Remove(0, 1).ToUpper().StartsWith(o.ToUpper()));
+                    return _words.Any(o => address.Remove(0, 1).StartsWith(o, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (_isEndsWith)
                 {
-                    return _words.Any(o => address.ToUpper().EndsWith(o.ToUpper()));
+                    return _words.Any(o => address.EndsWith(o, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 return _words.Any(o => address.ToUpper().Contains(o.ToUpper()));
