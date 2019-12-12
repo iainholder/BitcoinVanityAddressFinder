@@ -1,4 +1,6 @@
-﻿namespace BitcoinVanityAddressFinder.Services
+﻿using System;
+
+namespace BitcoinVanityAddressFinder.Services
 {
     public class InputStringVerifierService
     {
@@ -34,17 +36,17 @@
                 {
                     if (_isStartsWith && _isEndsWith)
                     {
-                        return address.Remove(0, 1).StartsWith(_vanityText) && address.EndsWith(_vanityText);
+                        return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCulture) && address.EndsWith(_vanityText, StringComparison.InvariantCulture);
                     }
 
                     if (_isStartsWith)
                     {
-                        return address.Remove(0, 1).StartsWith(_vanityText);
+                        return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCulture);
                     }
 
                     if (_isEndsWith)
                     {
-                        return address.EndsWith(_vanityText);
+                        return address.EndsWith(_vanityText, StringComparison.InvariantCulture);
                     }
 
                     return address.Contains(_vanityText);
@@ -52,17 +54,17 @@
 
                 if (_isStartsWith && _isEndsWith)
                 {
-                    return address.Remove(0, 1).ToUpper().StartsWith(_vanityText.ToUpper()) && address.ToUpper().EndsWith(_vanityText.ToUpper());
+                    return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase) && address.EndsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase);
                 }
 
                 if (_isStartsWith)
                 {
-                    return address.Remove(0, 1).ToUpper().StartsWith(_vanityText.ToUpper());
+                    return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase);
                 }
 
                 if (_isEndsWith)
                 {
-                    return address.ToUpper().EndsWith(_vanityText.ToUpper());
+                    return address.EndsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase);
                 }
 
                 return address.ToUpper().Contains(_vanityText.ToUpper());
