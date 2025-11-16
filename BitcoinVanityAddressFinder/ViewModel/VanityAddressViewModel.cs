@@ -9,8 +9,8 @@ using System.Windows;
 using BitcoinVanityAddressFinder.Annotations;
 using BitcoinVanityAddressFinder.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.ViewModel
@@ -281,10 +281,10 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             var stopwatch = new Stopwatch();
 
-            Messenger.Default.Register<int>(this, _attemptCountMessageTokenGuid, o =>
+            StrongReferenceMessenger.Default.Register<VanityAddressViewModel, int, string>(this, _attemptCountMessageTokenGuid, (recipient, o) =>
             {
-                    AttemptCount = o;
-                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {CoreComboBoxSelectedItem} core{s} at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
+                recipient.AttemptCount = o;
+                recipient.StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {recipient.CoreComboBoxSelectedItem} core{s} at {recipient.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
             });
 
             _cancellationTokenSource = new CancellationTokenSource();
@@ -335,7 +335,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 finally
                 {
                     stopwatch.Stop();
-                    Messenger.Default.Unregister<int>(this, _attemptCountMessageTokenGuid);
+                    StrongReferenceMessenger.Default.Unregister<int, string>(this, _attemptCountMessageTokenGuid);
                     IsSearching = false;
                     _cancellationTokenSource.Cancel();
                     _cancellationTokenSource.Dispose();
