@@ -281,9 +281,9 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             var stopwatch = new Stopwatch();
 
-            StrongReferenceMessenger.Default.Register<VanityAddressViewModel, int, string>(this, _attemptCountMessageTokenGuid, (recipient, o) =>
+            StrongReferenceMessenger.Default.Register<VanityAddressViewModel, string, string>(this, _attemptCountMessageTokenGuid, (recipient, o) =>
             {
-                recipient.AttemptCount = o;
+                recipient.AttemptCount = int.Parse(o);
                 recipient.StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {recipient.CoreComboBoxSelectedItem} core{s} at {recipient.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
             });
 
@@ -335,7 +335,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 finally
                 {
                     stopwatch.Stop();
-                    StrongReferenceMessenger.Default.Unregister<int, string>(this, _attemptCountMessageTokenGuid);
+                    StrongReferenceMessenger.Default.Unregister<string, string>(this, _attemptCountMessageTokenGuid);
                     IsSearching = false;
                     _cancellationTokenSource.Cancel();
                     _cancellationTokenSource.Dispose();
