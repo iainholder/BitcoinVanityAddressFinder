@@ -87,7 +87,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             set
             {
                 SetProperty(ref _modeComboBoxSelectedItem, value);
-                RaisePropertyChanged(nameof(IsStringSearchMode));
+                OnPropertyChanged(nameof(IsStringSearchMode));
             }
         }
 
@@ -134,7 +134,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     _coreComboBoxSelectedItem = value;
                 }
 
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
