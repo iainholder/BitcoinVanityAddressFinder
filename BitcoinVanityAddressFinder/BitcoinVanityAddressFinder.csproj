@@ -235,6 +235,9 @@
   <ItemGroup>
     <Resource Include="bitcoin-logo.32x32.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="PNF_Catalog_Extractor.py" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
