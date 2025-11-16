@@ -12,7 +12,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenNotContains_DontMatch(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, false, false, false);
-            Assert.IsFalse(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
 
         [TestCase("1111111111111111111111111111111111", "1111")]
@@ -22,7 +22,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenContains_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, false, false, false);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "xxxx")]
@@ -32,7 +32,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenNotCaseSensitive_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, false, false, false);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "xxxx")]
@@ -42,7 +42,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenCaseSensitive_DontMatch(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, false, false);
-            Assert.False(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
 
         [TestCase("1XXXX11111111111111111111111111111", "XXXX")]
@@ -50,7 +50,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenStartsWith_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, false, true, false);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("11111111111111111XXXX1111111111111", "XXXX")]
@@ -58,7 +58,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenStartsWith_DontMatch(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, false, true, false);
-            Assert.IsFalse(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
 
         [TestCase("1XXXX1111111111111111111111111XXXX", "XXXX")]
@@ -66,7 +66,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenEndsWith_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, false, false, true);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("1111111111111111111111111111111111", "1111")]
@@ -76,7 +76,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenContainsAndCaseSensitive_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, false, false);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "xxxx")]
@@ -88,7 +88,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenContainsAndCaseSensitive_DontMatch(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, false, false);
-            Assert.IsFalse(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
 
         [TestCase("1XXXX11111111111111111111111111111", "XXXX")]
@@ -96,7 +96,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenStartsWithAndCaseSensitive_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, true, false);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("1xxxx11111111111111111111111111111", "XXXX")]
@@ -104,7 +104,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenStartsWithAndCaseSensitive_DontMatch(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, true, false);
-            Assert.IsFalse(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
 
         [TestCase("111111111111111111111111111111XXXX", "XXXX")]
@@ -112,7 +112,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenEndsWithAndCaseSensitive_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, false, true);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("111111111111111111111111111111xxxx", "XXXX")]
@@ -120,7 +120,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenEndsWithAndCaseSensitive_DontMatch(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, false, true);
-            Assert.IsFalse(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
 
         [TestCase("1XXXX1111111111111111111111111XXXX", "XXXX")]
@@ -128,7 +128,7 @@ namespace BitcoinVanityAddressFinder.Tests
         public void IsVanityAddress_WhenStartsWithAndEndsWithAndCaseSensitive_Match(string address, string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, true, true);
-            Assert.IsTrue(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.True);
         }
 
         [TestCase("1XXXX1111111111111111111111111xxxx", "XXXX")]
@@ -137,7 +137,7 @@ namespace BitcoinVanityAddressFinder.Tests
             string vanityText)
         {
             var vanityAddressVerifier = new InputStringVerifierService(vanityText, true, true, true);
-            Assert.IsFalse(vanityAddressVerifier.IsVanityAddress(address));
+            Assert.That(vanityAddressVerifier.IsVanityAddress(address), Is.False);
         }
     }
 }
