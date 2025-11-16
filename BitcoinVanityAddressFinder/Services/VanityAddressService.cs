@@ -40,8 +40,11 @@ namespace BitcoinVanityAddressFinder.Services
 
             var dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (sender, args) => WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), attemptCountMessageTokenGuid);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 500); // 500ms
             dispatcherTimer.Start();
+
+            // Send initial count to reset UI
+            WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), attemptCountMessageTokenGuid);
 
             return Task.Run(() =>
             {

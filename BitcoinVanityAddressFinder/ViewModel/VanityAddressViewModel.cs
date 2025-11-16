@@ -88,6 +88,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             {
                 SetProperty(ref _modeComboBoxSelectedItem, value);
                 OnPropertyChanged(nameof(IsStringSearchMode));
+                SearchCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -148,7 +149,11 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public string VanityText
         {
             get => _vanityText;
-            set => SetProperty(ref _vanityText, value.Replace(" ", ""));
+            set
+            {
+                SetProperty(ref _vanityText, value.Replace(" ", ""));
+                SearchCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [UsedImplicitly]
@@ -162,7 +167,12 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public bool IsSearching
         {
             get => _isSearching;
-            set => SetProperty(ref _isSearching, value);
+            set
+            {
+                SetProperty(ref _isSearching, value);
+                SearchCommand.NotifyCanExecuteChanged();
+                CancelCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [UsedImplicitly]
@@ -281,10 +291,11 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             var stopwatch = new Stopwatch();
 
-            StrongReferenceMessenger.Default.Register<VanityAddressViewModel, string, string>(this, _attemptCountMessageTokenGuid, (recipient, o) =>
+            WeakReferenceMessenger.Default.Register<string, string>(this, _attemptCountMessageTokenGuid, (recipient, message) =>
             {
-                recipient.AttemptCount = int.Parse(o);
-                recipient.StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {recipient.CoreComboBoxSelectedItem} core{s} at {recipient.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
+                var vm = (VanityAddressViewModel)recipient;
+                vm.AttemptCount = int.Parse(message);
+                vm.StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {vm.CoreComboBoxSelectedItem} core{s} at {vm.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
             });
 
             _cancellationTokenSource = new CancellationTokenSource();
