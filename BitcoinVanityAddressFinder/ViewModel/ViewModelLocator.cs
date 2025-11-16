@@ -15,7 +15,7 @@
 // using GalaSoft.MvvmLight;
 
 using BitcoinVanityAddressFinder.Services;
-using GalaSoft.MvvmLight.Ioc;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommonServiceLocator;
 
 namespace BitcoinVanityAddressFinder.ViewModel
@@ -31,7 +31,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         /// </summary>
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            // ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default); // Not needed with CommunityToolkit.Mvvm.DependencyInjection.Ioc
 
             ////if (ViewModelBase.IsInDesignModeStatic)
             ////{
@@ -44,11 +44,15 @@ namespace BitcoinVanityAddressFinder.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<VanityAddressViewModel>();
-            SimpleIoc.Default.Register<IServiceFactory, ServiceFactory>();
+            Ioc.Default.ConfigureServices(
+                new Microsoft.Extensions.DependencyInjection.ServiceCollection()
+                    .AddSingleton<IServiceFactory, ServiceFactory>()
+                    .AddSingleton<VanityAddressViewModel>()
+                    .BuildServiceProvider()
+            );
         }
 
-        public VanityAddressViewModel VanityAddressViewModel => ServiceLocator.Current.GetInstance<VanityAddressViewModel>();
+        public VanityAddressViewModel VanityAddressViewModel => Ioc.Default.GetRequiredService<VanityAddressViewModel>();
 
         public static void Cleanup()
         {
