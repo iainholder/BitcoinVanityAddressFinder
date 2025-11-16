@@ -16,8 +16,6 @@
     <PackageReference Include="NBitcoin" Version="9.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NUnit" Version="4.4.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
