@@ -339,7 +339,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                     IsSearching = false;
                     _cancellationTokenSource.Cancel();
                     _cancellationTokenSource.Dispose();
-                    SearchCommand.RaiseCanExecuteChanged();
+                    SearchCommand.NotifyCanExecuteChanged();
                 }
             }
         }
