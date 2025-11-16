@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using BitcoinVanityAddressFinder.ViewModel;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.Services
@@ -39,7 +39,7 @@ namespace BitcoinVanityAddressFinder.Services
             _semaphore = new SemaphoreSlim(cores, cores);
 
             var dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += (sender, args) => Messenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
+            dispatcherTimer.Tick += (sender, args) => WeakReferenceMessenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
 
@@ -111,7 +111,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                 dispatcherTimer.Stop();
 
-                Messenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
+                WeakReferenceMessenger.Default.Send(_attemptCount, attemptCountMessageTokenGuid);
 
                 return resultResult;
             }, ct);
