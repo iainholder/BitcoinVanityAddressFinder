@@ -12,6 +12,7 @@
   See http://www.galasoft.ch/mvvm
 */
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 // using GalaSoft.MvvmLight;
 
