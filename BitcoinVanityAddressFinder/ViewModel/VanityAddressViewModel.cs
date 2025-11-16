@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using BitcoinVanityAddressFinder.Annotations;
 using BitcoinVanityAddressFinder.Services;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using NBitcoin;
@@ -21,7 +21,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         Dictionary
     }
 
-    public sealed class VanityAddressViewModel : ViewModelBase, IDataErrorInfo
+    public sealed class VanityAddressViewModel : ObservableObject, IDataErrorInfo
     {
         private readonly IServiceFactory _serviceFactory;
 
@@ -74,7 +74,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public int DictionaryLengthComboBoxSelectedItem
         {
             get => _dictionaryLengthComboBoxSelectedItem;
-            set => Set(ref _dictionaryLengthComboBoxSelectedItem, value);
+            set => SetProperty(ref _dictionaryLengthComboBoxSelectedItem, value);
         }
 
         [UsedImplicitly]
@@ -86,7 +86,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             get => _modeComboBoxSelectedItem;
             set
             {
-                Set(ref _modeComboBoxSelectedItem, value);
+                SetProperty(ref _modeComboBoxSelectedItem, value);
                 RaisePropertyChanged(nameof(IsStringSearchMode));
             }
         }
@@ -101,7 +101,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public Network NetworkComboBoxSelectedItem
         {
             get => _networkComboBoxSelectedItem;
-            set => Set(ref _networkComboBoxSelectedItem, value);
+            set => SetProperty(ref _networkComboBoxSelectedItem, value);
         }
 
         [UsedImplicitly]
@@ -148,70 +148,70 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public string VanityText
         {
             get => _vanityText;
-            set => Set(ref _vanityText, value.Replace(" ", ""));
+            set => SetProperty(ref _vanityText, value.Replace(" ", ""));
         }
 
         [UsedImplicitly]
         public string Address
         {
             get => _address;
-            set => Set(ref _address, value);
+            set => SetProperty(ref _address, value);
         }
 
         [UsedImplicitly]
         public bool IsSearching
         {
             get => _isSearching;
-            set => Set(ref _isSearching, value);
+            set => SetProperty(ref _isSearching, value);
         }
 
         [UsedImplicitly]
         public string PrivateKey
         {
             get => _privateKey;
-            set => Set(ref _privateKey, value);
+            set => SetProperty(ref _privateKey, value);
         }
 
         [UsedImplicitly]
         public bool IsCaseSensitive
         {
             get => _isCaseSensitive;
-            set => Set(ref _isCaseSensitive, value);
+            set => SetProperty(ref _isCaseSensitive, value);
         }
 
         [UsedImplicitly]
         public bool IsStartsWith
         {
             get => _isStartsWith;
-            set => Set(ref _isStartsWith, value);
+            set => SetProperty(ref _isStartsWith, value);
         }
 
         [UsedImplicitly]
         public bool IsEndsWith
         {
             get => _isEndsWith;
-            set => Set(ref _isEndsWith, value);
+            set => SetProperty(ref _isEndsWith, value);
         }
 
         [UsedImplicitly]
         public bool IsBeep
         {
             get => _isBeep;
-            set => Set(ref _isBeep, value);
+            set => SetProperty(ref _isBeep, value);
         }
 
         [UsedImplicitly]
         public string StatusText
         {
             get => _statusText;
-            set => Set(ref _statusText, value);
+            set => SetProperty(ref _statusText, value);
         }
 
         [UsedImplicitly]
         public int AttemptCount
         {
             get => _attemptCount;
-            set => Set(ref _attemptCount, value);
+            set => SetProperty(ref _attemptCount, value);
         }
 
         public string this[string columnName]
