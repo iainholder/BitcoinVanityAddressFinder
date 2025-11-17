@@ -25,24 +25,10 @@ namespace BitcoinVanityAddressFinder.ViewModel
     {
         private readonly IServiceFactory _serviceFactory;
 
-        private string _address;
-        private int _attemptCount;
-
         private string _attemptCountMessageTokenGuid = "";
 
         private CancellationTokenSource _cancellationTokenSource;
-        private int _coreComboBoxSelectedItem;
-        private int _dictionaryLengthComboBoxSelectedItem;
-        private bool _isBeep;
-        private bool _isCaseSensitive;
-        private bool _isEndsWith;
         private bool _isSearching;
-        private bool _isStartsWith;
-        private SearchMode _modeComboBoxSelectedItem;
-        private Network _networkComboBoxSelectedItem;
-        private string _privateKey;
-        private string _statusText;
-        private string _vanityText;
 
         public VanityAddressViewModel(IServiceFactory serviceFactory)
         {
@@ -54,13 +40,13 @@ namespace BitcoinVanityAddressFinder.ViewModel
             VanityText = "";
             IsCaseSensitive = true;
 
-            ModeComboBoxItems = new[] { SearchMode.String, SearchMode.Dictionary };
+            ModeComboBoxItems = [SearchMode.String, SearchMode.Dictionary];
             ModeComboBoxSelectedItem = SearchMode.String;
 
             DictionaryLengthComboBoxItems = Enumerable.Range(3, 5);
             DictionaryLengthComboBoxSelectedItem = 3;
 
-            NetworkComboBoxItems = new[] { Network.Main, Network.TestNet, Network.RegTest };
+            NetworkComboBoxItems = [Network.Main, Network.TestNet, Network.RegTest];
             NetworkComboBoxSelectedItem = Network.Main;
 
             CoreComboBoxItems = Enumerable.Range(1, Environment.ProcessorCount);
@@ -73,8 +59,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public int DictionaryLengthComboBoxSelectedItem
         {
-            get => _dictionaryLengthComboBoxSelectedItem;
-            set => SetProperty(ref _dictionaryLengthComboBoxSelectedItem, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
@@ -83,10 +69,10 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public SearchMode ModeComboBoxSelectedItem
         {
-            get => _modeComboBoxSelectedItem;
+            get;
             set
             {
-                SetProperty(ref _modeComboBoxSelectedItem, value);
+                SetProperty(ref field, value);
                 OnPropertyChanged(nameof(IsStringSearchMode));
                 SearchCommand.NotifyCanExecuteChanged();
             }
@@ -101,8 +87,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public Network NetworkComboBoxSelectedItem
         {
-            get => _networkComboBoxSelectedItem;
-            set => SetProperty(ref _networkComboBoxSelectedItem, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
@@ -111,28 +97,25 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public int CoreComboBoxSelectedItem
         {
-            get => _coreComboBoxSelectedItem;
+            get;
             set
             {
                 if (value > Environment.ProcessorCount - 1)
                 {
-                    if (MessageBox.Show($"You should leave one core for Windows and other running processes.{Environment.NewLine}If you are sure you want to use all your CPU cores and understand the implications, press OK. Otherwise press Cancel to default to {Environment.ProcessorCount - 1}.", "Cores", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
+                    if (MessageBox.Show($"You should leave one core for Windows and other running processes.{Environment.NewLine}" +
+                                        $"If you are sure you want to use all your CPU cores and understand the implications, press OK. Otherwise press Cancel to default to {Environment.ProcessorCount - 1}.", "Cores",
+                            MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
                     {
-                        // HACK - God I hate this. Find out issue and remove
-                        Task.Run(() =>
-                        {
-                            Thread.Sleep(100);
-                            CoreComboBoxSelectedItem = Environment.ProcessorCount - 1;
-                        });
+                        field = Environment.ProcessorCount - 1;
                     }
                     else
                     {
-                        _coreComboBoxSelectedItem = value;
+                        field = value;
                     }
                 }
                 else
                 {
-                    _coreComboBoxSelectedItem = value;
+                    field = value;
                 }
 
                 OnPropertyChanged();
@@ -148,10 +131,10 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public string VanityText
         {
-            get => _vanityText;
+            get;
             set
             {
-                SetProperty(ref _vanityText, value.Replace(" ", ""));
+                SetProperty(ref field, value.Replace(" ", ""));
                 SearchCommand.NotifyCanExecuteChanged();
             }
         }
@@ -159,8 +142,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public string Address
         {
-            get => _address;
-            set => SetProperty(ref _address, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
@@ -178,50 +161,50 @@ namespace BitcoinVanityAddressFinder.ViewModel
         [UsedImplicitly]
         public string PrivateKey
         {
-            get => _privateKey;
-            set => SetProperty(ref _privateKey, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
         public bool IsCaseSensitive
         {
-            get => _isCaseSensitive;
-            set => SetProperty(ref _isCaseSensitive, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
         public bool IsStartsWith
         {
-            get => _isStartsWith;
-            set => SetProperty(ref _isStartsWith, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
         public bool IsEndsWith
         {
-            get => _isEndsWith;
-            set => SetProperty(ref _isEndsWith, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
         public bool IsBeep
         {
-            get => _isBeep;
-            set => SetProperty(ref _isBeep, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
         public string StatusText
         {
-            get => _statusText;
-            set => SetProperty(ref _statusText, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [UsedImplicitly]
         public int AttemptCount
         {
-            get => _attemptCount;
-            set => SetProperty(ref _attemptCount, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public string this[string columnName]
@@ -244,7 +227,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
                                 return Error;
                             }
 
-                            if (VanityText.Length > 0 && VanityText.Length < 8)
+                            if (VanityText.Length is > 0 and < 8)
                             {
                                 return "";
                             }
@@ -301,57 +284,56 @@ namespace BitcoinVanityAddressFinder.ViewModel
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
 
-            using (var vanityAddressService = _serviceFactory.GetVanityAddressService())
+            using var vanityAddressService = _serviceFactory.GetVanityAddressService();
+
+            try
             {
-                try
+                stopwatch.Start();
+
+                var result = await vanityAddressService.Search(
+                    CoreComboBoxSelectedItem,
+                    ModeComboBoxSelectedItem,
+                    VanityText,
+                    DictionaryLengthComboBoxSelectedItem,
+                    IsCaseSensitive,
+                    IsStartsWith,
+                    IsEndsWith,
+                    NetworkComboBoxSelectedItem,
+                    _attemptCountMessageTokenGuid,
+                    ct);
+
+                stopwatch.Stop();
+
+                var vanityPrivateKey = result;
+                Address = vanityPrivateKey?.PubKey.GetAddress(ScriptPubKeyType.Legacy, NetworkComboBoxSelectedItem).ToString();
+                PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
+                StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after searching {AttemptCount} keys at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second.";
+
+                if (IsBeep)
                 {
-                    stopwatch.Start();
-
-                    var result = await vanityAddressService.Search(
-                        CoreComboBoxSelectedItem,
-                        ModeComboBoxSelectedItem,
-                        VanityText,
-                        DictionaryLengthComboBoxSelectedItem,
-                        IsCaseSensitive,
-                        IsStartsWith,
-                        IsEndsWith,
-                        NetworkComboBoxSelectedItem,
-                        _attemptCountMessageTokenGuid,
-                        ct);
-
-                    stopwatch.Stop();
-
-                    var vanityPrivateKey = result;
-                    Address = vanityPrivateKey?.PubKey.GetAddress(ScriptPubKeyType.Legacy, NetworkComboBoxSelectedItem).ToString();
-                    PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after searching {AttemptCount} keys at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second.";
-
-                    if (IsBeep)
-                    {
-                        Console.Beep(808, 303);
-                    }
+                    Console.Beep(808, 303);
                 }
-                catch (AggregateException ae)
+            }
+            catch (AggregateException ae)
+            {
+                if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    if (_cancellationTokenSource.IsCancellationRequested)
-                    {
-                        StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Search cancelled";
-                    }
-                    else
-                    {
-                        MessageBox.Show(ae.Flatten().ToString());
-                        StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Error";
-                    }
+                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Search cancelled";
                 }
-                finally
+                else
                 {
-                    stopwatch.Stop();
-                    StrongReferenceMessenger.Default.Unregister<string, string>(this, _attemptCountMessageTokenGuid);
-                    IsSearching = false;
-                    _cancellationTokenSource.Cancel();
-                    _cancellationTokenSource.Dispose();
-                    SearchCommand.NotifyCanExecuteChanged();
+                    MessageBox.Show(ae.Flatten().ToString());
+                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Error";
                 }
+            }
+            finally
+            {
+                stopwatch.Stop();
+                StrongReferenceMessenger.Default.Unregister<string, string>(this, _attemptCountMessageTokenGuid);
+                IsSearching = false;
+                await _cancellationTokenSource.CancelAsync();
+                _cancellationTokenSource.Dispose();
+                SearchCommand.NotifyCanExecuteChanged();
             }
         }
     }
