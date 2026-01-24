@@ -144,6 +144,7 @@
               Header="Keys searched">
       <Label HorizontalAlignment="Center"
              Content="{Binding AttemptCount, FallbackValue=123456789}"
+             ContentStringFormat="{}{0:N0}"
              FontFamily="Consolas"
              FontSize="24"
              FontWeight="Bold" />
