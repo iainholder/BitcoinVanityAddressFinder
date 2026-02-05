@@ -1,73 +1,40 @@
 ﻿using System;
+using System.Threading;
 
 namespace BitcoinVanityAddressFinder.Services
 {
-    public class InputStringVerifierService
+    public class InputStringVerifierService(
+        string vanityText,
+        bool isCaseSensitive,
+        bool isStartsWith,
+        bool isEndsWith)
     {
-        private readonly object _lock = new object();
-        private readonly string _vanityText;
-        private readonly bool _isCaseSensitive;
-        private readonly bool _isStartsWith;
-        private readonly bool _isEndsWith;
-
-        public InputStringVerifierService(
-            string vanityText,
-            bool isCaseSensitive,
-            bool isStartsWith,
-            bool isEndsWith)
-        {
-            _vanityText = vanityText;
-            _isCaseSensitive = isCaseSensitive;
-            _isStartsWith = isStartsWith;
-            _isEndsWith = isEndsWith;
-        }
+        private readonly Lock _lock = new();
 
         public bool IsVanityAddress(string address)
         {
             lock (_lock)
             {
-                // TODO - Get the actual length
                 if (address.Length < 3)
                 {
                     return false;
                 }
 
-                if (_isCaseSensitive)
+                var comparison = isCaseSensitive
+                    ? StringComparison.InvariantCulture
+                    : StringComparison.InvariantCultureIgnoreCase;
+
+                string addressWithoutPrefix = address[1..];
+
+                bool matchesStart = !isStartsWith || addressWithoutPrefix.StartsWith(vanityText, comparison);
+                bool matchesEnd = !isEndsWith || address.EndsWith(vanityText, comparison);
+
+                if (isStartsWith || isEndsWith)
                 {
-                    if (_isStartsWith && _isEndsWith)
-                    {
-                        return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCulture) && address.EndsWith(_vanityText, StringComparison.InvariantCulture);
-                    }
-
-                    if (_isStartsWith)
-                    {
-                        return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCulture);
-                    }
-
-                    if (_isEndsWith)
-                    {
-                        return address.EndsWith(_vanityText, StringComparison.InvariantCulture);
-                    }
-
-                    return address.Contains(_vanityText);
+                    return matchesStart && matchesEnd;
                 }
 
-                if (_isStartsWith && _isEndsWith)
-                {
-                    return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase) && address.EndsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase);
-                }
-
-                if (_isStartsWith)
-                {
-                    return address.Remove(0, 1).StartsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase);
-                }
-
-                if (_isEndsWith)
-                {
-                    return address.EndsWith(_vanityText, StringComparison.InvariantCultureIgnoreCase);
-                }
-
-                return address.ToUpper().Contains(_vanityText.ToUpper());
+                return address.Contains(vanityText, comparison);
             }
         }
     }
