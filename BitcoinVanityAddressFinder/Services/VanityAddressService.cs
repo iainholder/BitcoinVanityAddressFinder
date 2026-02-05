@@ -12,16 +12,10 @@ using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.Services
 {
-    public class VanityAddressService : IDisposable
+    public class VanityAddressService(IServiceFactory serviceFactory) : IDisposable
     {
-        private readonly IServiceFactory _serviceFactory;
         private static SemaphoreSlim _semaphore;
         private int _attemptCount;
-
-        public VanityAddressService(IServiceFactory serviceFactory)
-        {
-            _serviceFactory = serviceFactory;
-        }
 
         public Task<Key> Search(
             int cores,
@@ -61,7 +55,7 @@ namespace BitcoinVanityAddressFinder.Services
 
                         if (searchMode == SearchMode.String)
                         {
-                            var inputStringVerifier = _serviceFactory.GetInputStringVerifierService(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
+                            var inputStringVerifier = serviceFactory.GetInputStringVerifierService(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
 
                             while (!inputStringVerifier.IsVanityAddress(address))
                             {
@@ -87,7 +81,7 @@ namespace BitcoinVanityAddressFinder.Services
                             // 3. Use immutable hashset for confirmed thread safety and 2.
                             var words = GetWordsHashSet(minWordLength);
 
-                            var dictionaryWordVerifier = _serviceFactory.GetDictionaryWordVerifierService(words, isCaseSensitive, isStartsWith, isEndsWith);
+                            var dictionaryWordVerifier = serviceFactory.GetDictionaryWordVerifierService(words, isCaseSensitive, isStartsWith, isEndsWith);
 
                             while (!dictionaryWordVerifier.IsDictionaryWordAddress(address))
                             {
