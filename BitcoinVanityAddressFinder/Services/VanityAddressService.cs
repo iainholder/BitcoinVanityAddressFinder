@@ -32,6 +32,8 @@ namespace BitcoinVanityAddressFinder.Services
             _attemptCount = 0;
             _semaphore = new SemaphoreSlim(cores, cores);
 
+            // Timer must be created on the UI thread (the caller) so its dispatcher has a message loop.
+            // Creating it inside Task.Run puts it on a thread pool thread which never pumps messages.
             var dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (sender, args) => WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), attemptCountMessageTokenGuid);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 500); // 500ms
@@ -42,13 +44,16 @@ namespace BitcoinVanityAddressFinder.Services
 
             return Task.Run(() =>
             {
+                using var matchCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                var matchCt = matchCts.Token;
+
                 var tasks = new List<Task<Key>>();
 
                 for (int i = 0; i < cores; i++)
                 {
                     tasks.Add(Task.Run(() =>
                     {
-                        _semaphore.Wait(ct);
+                        _semaphore.Wait(matchCt);
 
                         string address = "";
                         Key privateKey = null;
@@ -59,9 +64,9 @@ namespace BitcoinVanityAddressFinder.Services
 
                             while (!inputStringVerifier.IsVanityAddress(address))
                             {
-                                if (ct.IsCancellationRequested)
+                                if (matchCt.IsCancellationRequested)
                                 {
-                                    ct.ThrowIfCancellationRequested();
+                                    matchCt.ThrowIfCancellationRequested();
                                 }
 
                                 privateKey = new Key();
@@ -85,9 +90,9 @@ namespace BitcoinVanityAddressFinder.Services
 
                             while (!dictionaryWordVerifier.IsDictionaryWordAddress(address))
                             {
-                                if (ct.IsCancellationRequested)
+                                if (matchCt.IsCancellationRequested)
                                 {
-                                    ct.ThrowIfCancellationRequested();
+                                    matchCt.ThrowIfCancellationRequested();
                                 }
 
                                 privateKey = new Key();
@@ -101,10 +106,13 @@ namespace BitcoinVanityAddressFinder.Services
                         _semaphore.Release();
 
                         return privateKey;
-                    }, ct));
+                    }, matchCt));
                 }
 
-                var resultResult = Task.WhenAny(tasks.ToArray()).Result.Result;
+                var winningTask = Task.WhenAny(tasks.ToArray()).Result;
+                matchCts.Cancel(); // stop the other worker tasks
+
+                var resultResult = winningTask.Result;
 
                 dispatcherTimer.Stop();
 
@@ -124,7 +132,7 @@ namespace BitcoinVanityAddressFinder.Services
                 // TODO - Improve handling of this exception
                 using (var reader = new StreamReader(stream ?? throw new InvalidOperationException("Dictionary not found.")))
                 {
-                    var words = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    var words = reader.ReadToEnd().Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
 
                     return words
                         .Where(o => o.Length >= minWordLength)

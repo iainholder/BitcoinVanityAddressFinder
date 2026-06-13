@@ -329,7 +329,7 @@ namespace BitcoinVanityAddressFinder.ViewModel
             finally
             {
                 stopwatch.Stop();
-                StrongReferenceMessenger.Default.Unregister<string, string>(this, _attemptCountMessageTokenGuid);
+                WeakReferenceMessenger.Default.Unregister<string, string>(this, _attemptCountMessageTokenGuid);
                 IsSearching = false;
                 await _cancellationTokenSource.CancelAsync();
                 _cancellationTokenSource.Dispose();
