@@ -5,16 +5,42 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinVanityAddressFinder", "BitcoinVanityAddressFinder.csproj", "{D750EB44-A10C-4E61-9AB2-27302D65656E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinVanityAddressFinder.Tests", "..\BitcoinVanityAddressFinder.Tests\BitcoinVanityAddressFinder.Tests.csproj", "{B319C3C3-8D90-422B-B639-438F9E3ACDDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Debug|x64.Build.0 = Debug|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Debug|x86.Build.0 = Debug|Any CPU
 		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Release|x64.ActiveCfg = Release|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Release|x64.Build.0 = Release|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Release|x86.ActiveCfg = Release|Any CPU
+		{D750EB44-A10C-4E61-9AB2-27302D65656E}.Release|x86.Build.0 = Release|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Debug|x64.Build.0 = Debug|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Release|x64.ActiveCfg = Release|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Release|x64.Build.0 = Release|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B319C3C3-8D90-422B-B639-438F9E3ACDDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

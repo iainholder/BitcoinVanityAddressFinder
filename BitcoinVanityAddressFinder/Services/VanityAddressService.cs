@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,12 +12,11 @@ using NBitcoin;
 
 namespace BitcoinVanityAddressFinder.Services
 {
-    public class VanityAddressService(IServiceFactory serviceFactory) : IDisposable
+    public class VanityAddressService(IServiceFactory serviceFactory)
     {
-        private static SemaphoreSlim _semaphore;
         private int _attemptCount;
 
-        public Task<Key> Search(
+        public async Task<Key> Search(
             int cores,
             SearchMode searchMode,
             string vanityText,
@@ -30,96 +29,97 @@ namespace BitcoinVanityAddressFinder.Services
             CancellationToken ct)
         {
             _attemptCount = 0;
-            _semaphore = new SemaphoreSlim(cores, cores);
 
-            // Timer must be created on the UI thread (the caller) so its dispatcher has a message loop.
-            // Creating it inside Task.Run puts it on a thread pool thread which never pumps messages.
-            var dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += (sender, args) => WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), attemptCountMessageTokenGuid);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 500); // 500ms
+            // The timer must be created on the UI thread (the caller) so its dispatcher has a
+            // message loop. Creating it inside Task.Run would put it on a thread-pool thread
+            // that never pumps messages.
+            var dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+            dispatcherTimer.Tick += (_, _) => SendAttemptCount(attemptCountMessageTokenGuid);
             dispatcherTimer.Start();
 
-            // Send initial count to reset UI
-            WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), attemptCountMessageTokenGuid);
+            // Send the initial (zero) count to reset the UI.
+            SendAttemptCount(attemptCountMessageTokenGuid);
 
-            return Task.Run(() =>
+            using var matchCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            var matchCt = matchCts.Token;
+
+            try
             {
-                using var matchCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-                var matchCt = matchCts.Token;
-
-                var tasks = new List<Task<Key>>();
+                var tasks = new Task<Key>[cores];
 
                 for (int i = 0; i < cores; i++)
                 {
-                    tasks.Add(Task.Run(() =>
-                    {
-                        _semaphore.Wait(matchCt);
-
-                        string address = "";
-                        Key privateKey = null;
-
-                        if (searchMode == SearchMode.String)
-                        {
-                            var inputStringVerifier = serviceFactory.GetInputStringVerifierService(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
-
-                            while (!inputStringVerifier.IsVanityAddress(address))
-                            {
-                                if (matchCt.IsCancellationRequested)
-                                {
-                                    matchCt.ThrowIfCancellationRequested();
-                                }
-
-                                privateKey = new Key();
-
-                                address = privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
-
-                                Interlocked.Increment(ref _attemptCount);
-                            }
-                        }
-
-                        if (searchMode == SearchMode.Dictionary)
-                        {
-                            // Getting a new set of words for each thread is probably overkill as reading HashSet should be thread safe.
-                            // Options are:
-                            // 1. Leave it in.
-                            // 2. Use single hash set to save a little memory.
-                            // 3. Use immutable hashset for confirmed thread safety and 2.
-                            var words = GetWordsHashSet(minWordLength);
-
-                            var dictionaryWordVerifier = serviceFactory.GetDictionaryWordVerifierService(words, isCaseSensitive, isStartsWith, isEndsWith);
-
-                            while (!dictionaryWordVerifier.IsDictionaryWordAddress(address))
-                            {
-                                if (matchCt.IsCancellationRequested)
-                                {
-                                    matchCt.ThrowIfCancellationRequested();
-                                }
-
-                                privateKey = new Key();
-
-                                address = privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
-
-                                Interlocked.Increment(ref _attemptCount);
-                            }
-                        }
-
-                        _semaphore.Release();
-
-                        return privateKey;
-                    }, matchCt));
+                    tasks[i] = Task.Run(
+                        () => SearchWorker(searchMode, vanityText, minWordLength, isCaseSensitive, isStartsWith, isEndsWith, network, matchCt),
+                        matchCt);
                 }
 
-                var winningTask = Task.WhenAny(tasks.ToArray()).Result;
-                matchCts.Cancel(); // stop the other worker tasks
+                var winningTask = await Task.WhenAny(tasks);
 
-                var resultResult = winningTask.Result;
+                // A match (or fault) on one task; stop the rest before surfacing the result.
+                await matchCts.CancelAsync();
 
+                return await winningTask;
+            }
+            finally
+            {
+                // Always stop the timer and flush the final count, even on cancellation or error,
+                // otherwise the timer keeps ticking on the UI dispatcher forever.
                 dispatcherTimer.Stop();
+                SendAttemptCount(attemptCountMessageTokenGuid);
+            }
+        }
 
-                WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), attemptCountMessageTokenGuid);
+        private void SendAttemptCount(string token)
+        {
+            WeakReferenceMessenger.Default.Send(_attemptCount.ToString(), token);
+        }
 
-                return resultResult;
-            }, ct);
+        private Key SearchWorker(
+            SearchMode searchMode,
+            string vanityText,
+            int minWordLength,
+            bool isCaseSensitive,
+            bool isStartsWith,
+            bool isEndsWith,
+            Network network,
+            CancellationToken ct)
+        {
+            if (searchMode == SearchMode.String)
+            {
+                var verifier = serviceFactory.GetInputStringVerifierService(vanityText, isCaseSensitive, isStartsWith, isEndsWith);
+
+                while (true)
+                {
+                    ct.ThrowIfCancellationRequested();
+
+                    var privateKey = new Key();
+                    var address = privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
+                    Interlocked.Increment(ref _attemptCount);
+
+                    if (verifier.IsVanityAddress(address))
+                    {
+                        return privateKey;
+                    }
+                }
+            }
+
+            var words = GetWordsHashSet(minWordLength);
+            var dictionaryVerifier = serviceFactory.GetDictionaryWordVerifierService(words, isCaseSensitive, isStartsWith, isEndsWith);
+
+            while (true)
+            {
+                ct.ThrowIfCancellationRequested();
+
+                var privateKey = new Key();
+                var address = privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
+                Interlocked.Increment(ref _attemptCount);
+
+                if (dictionaryVerifier.IsDictionaryWordAddress(address))
+                {
+                    return privateKey;
+                }
+            }
         }
 
         private static HashSet<string> GetWordsHashSet(int minWordLength)
@@ -127,24 +127,15 @@ namespace BitcoinVanityAddressFinder.Services
             var assembly = Assembly.GetExecutingAssembly();
             const string dictionaryTxt = "BitcoinVanityAddressFinder.Services.Dictionary.txt";
 
-            using (var stream = assembly.GetManifestResourceStream(dictionaryTxt))
-            {
-                // TODO - Improve handling of this exception
-                using (var reader = new StreamReader(stream ?? throw new InvalidOperationException("Dictionary not found.")))
-                {
-                    var words = reader.ReadToEnd().Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+            using var stream = assembly.GetManifestResourceStream(dictionaryTxt)
+                               ?? throw new InvalidOperationException($"Embedded dictionary resource '{dictionaryTxt}' was not found.");
+            using var reader = new StreamReader(stream);
 
-                    return words
-                        .Where(o => o.Length >= minWordLength)
-                        .Distinct()
-                        .ToHashSet();
-                }
-            }
-        }
+            var words = reader.ReadToEnd().Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries);
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
+            return words
+                .Where(o => o.Length >= minWordLength)
+                .ToHashSet();
         }
     }
 }

@@ -21,17 +21,20 @@ repeating billions of times until a match is found.
 [Open source version: https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch04.asciidoc]
 
 ## Features
-- Search for addresses containing strings of up to 8 characters. Each letter makes the search exponentially harder.
+- Search for addresses containing strings of up to 7 characters. Each letter makes the search exponentially harder.
 - Search for random English words from a dictionary of 58k+.
 - Case sensitivity.
 - Addresses starting with a given string. Note the first character of a bitcoin address has meaning so after that character.
 - Address ending with a given string.
 - Multithreaded search up to the number of cores in your machine. Defaults to N-1.
-- Multiple networks, currently Main, TestNet and RegTest
+- Multiple networks, currently Main, TestNet and RegTest.
+- Live keys-per-second and attempt counters while searching.
+- Warns up front if your text contains characters that can never appear in a Base58 address (`0`, `O`, `I`, `l`), so you don't start a search that can never finish.
+- One-click **Copy** buttons for the address and private key.
 
 ## Based On
 - NBitcoin by Nicolas Dorier (https://github.com/MetacoSA/NBitcoin)
-- MVVMLight by Laurent Bugnion (http://www.mvvmlight.net)
+- CommunityToolkit.Mvvm (https://github.com/CommunityToolkit/dotnet)
 - NUnit (https://nunit.org/)
 
 ** Use at your own risk. Main address are valid and you're playing with real money.**

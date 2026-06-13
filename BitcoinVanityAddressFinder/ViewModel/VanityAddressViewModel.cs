@@ -36,6 +36,8 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
             SearchCommand = new RelayCommand(Search, CanExecuteSearch);
             CancelCommand = new RelayCommand(Cancel, CanCancel);
+            CopyAddressCommand = new RelayCommand(() => CopyToClipboard(Address), () => !string.IsNullOrEmpty(Address));
+            CopyPrivateKeyCommand = new RelayCommand(() => CopyToClipboard(PrivateKey), () => !string.IsNullOrEmpty(PrivateKey));
 
             VanityText = "";
             IsCaseSensitive = true;
@@ -129,6 +131,12 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public RelayCommand CancelCommand { get; set; }
 
         [UsedImplicitly]
+        public RelayCommand CopyAddressCommand { get; }
+
+        [UsedImplicitly]
+        public RelayCommand CopyPrivateKeyCommand { get; }
+
+        [UsedImplicitly]
         public string VanityText
         {
             get;
@@ -143,7 +151,11 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public string Address
         {
             get;
-            set => SetProperty(ref field, value);
+            set
+            {
+                SetProperty(ref field, value);
+                CopyAddressCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [UsedImplicitly]
@@ -162,14 +174,25 @@ namespace BitcoinVanityAddressFinder.ViewModel
         public string PrivateKey
         {
             get;
-            set => SetProperty(ref field, value);
+            set
+            {
+                SetProperty(ref field, value);
+                CopyPrivateKeyCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [UsedImplicitly]
         public bool IsCaseSensitive
         {
             get;
-            set => SetProperty(ref field, value);
+            set
+            {
+                SetProperty(ref field, value);
+                // Which characters are impossible in an address depends on case sensitivity,
+                // so re-run validation of the vanity text whenever this toggles.
+                OnPropertyChanged(nameof(VanityText));
+                SearchCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [UsedImplicitly]
@@ -215,24 +238,29 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 {
                     case nameof(VanityText):
                         {
-                            if (!VanityText.All(char.IsLetterOrDigit))
-                            {
-                                Error = "Letters and numbers only";
-                                return Error;
-                            }
-
-                            if (VanityText.Length >= 8)
-                            {
-                                Error = "That would take too long";
-                                return Error;
-                            }
-
-                            if (VanityText.Length is > 0 and < 8)
+                            // Empty is not an error to display, but Search stays disabled (see CanExecuteSearch).
+                            if (VanityText.Length == 0)
                             {
                                 return "";
                             }
 
-                            return "Error";
+                            if (!VanityText.All(char.IsLetterOrDigit))
+                            {
+                                return Error = "Letters and numbers only";
+                            }
+
+                            if (VanityText.Length >= 8)
+                            {
+                                return Error = "That would take too long";
+                            }
+
+                            string impossible = GetImpossibleBase58Characters(VanityText);
+                            if (impossible.Length > 0)
+                            {
+                                return Error = $"A Bitcoin address can never contain: {string.Join(' ', impossible.ToCharArray())}";
+                            }
+
+                            return "";
                         }
                 }
 
@@ -242,14 +270,58 @@ namespace BitcoinVanityAddressFinder.ViewModel
 
         public string Error { get; private set; }
 
-        private bool CanExecuteSearch()
+        // The Base58 alphabet Bitcoin uses deliberately omits 0 (zero), O, I and l to avoid
+        // visual ambiguity. Vanity text containing only-impossible characters could never match,
+        // so we surface it instead of launching an unwinnable, never-ending search.
+        private const string Base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+        private string GetImpossibleBase58Characters(string text)
         {
-            if (IsStringSearchMode)
+            var impossible = text
+                .Where(c => !Base58Alphabet.Contains(c)
+                            && (IsCaseSensitive || !Base58Alphabet.Contains(SwapCase(c))))
+                .Distinct()
+                .ToArray();
+
+            return new string(impossible);
+        }
+
+        private static char SwapCase(char c) =>
+            char.IsUpper(c) ? char.ToLowerInvariant(c) : char.ToUpperInvariant(c);
+
+        private static string FormatRate(int attempts, TimeSpan elapsed) =>
+            elapsed.TotalSeconds > 0 ? $"{attempts / elapsed.TotalSeconds:N0}" : "0";
+
+        private static void CopyToClipboard(string text)
+        {
+            if (string.IsNullOrEmpty(text))
             {
-                return this[nameof(VanityText)] == "" && !_isSearching;
+                return;
             }
 
-            return !_isSearching;
+            try
+            {
+                Clipboard.SetText(text);
+            }
+            catch (System.Runtime.InteropServices.ExternalException)
+            {
+                // The clipboard is occasionally locked by another process; ignore rather than crash.
+            }
+        }
+
+        private bool CanExecuteSearch()
+        {
+            if (_isSearching)
+            {
+                return false;
+            }
+
+            if (IsStringSearchMode)
+            {
+                return VanityText.Length > 0 && this[nameof(VanityText)] == "";
+            }
+
+            return true;
         }
 
         private void Cancel()
@@ -278,13 +350,13 @@ namespace BitcoinVanityAddressFinder.ViewModel
             {
                 var vm = (VanityAddressViewModel)recipient;
                 vm.AttemptCount = int.Parse(message);
-                vm.StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {vm.CoreComboBoxSelectedItem} core{s} at {vm.AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second...";
+                vm.StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Searching using {vm.CoreComboBoxSelectedItem} core{s} at {FormatRate(vm.AttemptCount, stopwatch.Elapsed)} keys per second...";
             });
 
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
 
-            using var vanityAddressService = _serviceFactory.GetVanityAddressService();
+            var vanityAddressService = _serviceFactory.GetVanityAddressService();
 
             try
             {
@@ -307,24 +379,21 @@ namespace BitcoinVanityAddressFinder.ViewModel
                 var vanityPrivateKey = result;
                 Address = vanityPrivateKey?.PubKey.GetAddress(ScriptPubKeyType.Legacy, NetworkComboBoxSelectedItem).ToString();
                 PrivateKey = vanityPrivateKey?.GetWif(NetworkComboBoxSelectedItem).ToString();
-                StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after searching {AttemptCount} keys at {AttemptCount / stopwatch.Elapsed.TotalSeconds:N0} keys per second.";
+                StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Completed after searching {AttemptCount:N0} keys at {FormatRate(AttemptCount, stopwatch.Elapsed)} keys per second.";
 
                 if (IsBeep)
                 {
                     Console.Beep(808, 303);
                 }
             }
-            catch (AggregateException ae)
+            catch (OperationCanceledException)
             {
-                if (_cancellationTokenSource.IsCancellationRequested)
-                {
-                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Search cancelled";
-                }
-                else
-                {
-                    MessageBox.Show(ae.Flatten().ToString());
-                    StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Error";
-                }
+                StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Search cancelled";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                StatusText = $"[{stopwatch.Elapsed:hh\\:mm\\:ss}] Error";
             }
             finally
             {

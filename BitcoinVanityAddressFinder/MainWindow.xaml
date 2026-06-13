@@ -10,7 +10,7 @@
         Background="#222222"
         DataContext="{Binding VanityAddressViewModel, Source={StaticResource Locator}}"
         FontFamily="Tahoma"
-        FontSize="18"
+        FontSize="16"
         ResizeMode="NoResize"
         mc:Ignorable="d">
   <Window.Resources>
@@ -116,24 +116,40 @@
     <Label Grid.Row="2"
            Grid.Column="0"
            Content="Address:" />
-    <TextBox Grid.Row="2"
-             Grid.Column="1"
-             Width="400"
-             Height="30"
-             Margin="0,4,0,2"
-             Text="{Binding Address, FallbackValue='1CCGFQWaExLhs7aRF4RfYB3CTrouserAaP'}" />
+    <StackPanel Grid.Row="2"
+                Grid.Column="1"
+                Margin="0,4,0,2"
+                Orientation="Horizontal">
+      <TextBox Width="330"
+               Height="30"
+               Text="{Binding Address, FallbackValue='1CCGFQWaExLhs7aRF4RfYB3CTrouserAaP'}" />
+      <Button Width="64"
+              Height="30"
+              Margin="6,0,0,0"
+              Command="{Binding CopyAddressCommand}"
+              Content="Copy"
+              ToolTip="Copy the address to the clipboard" />
+    </StackPanel>
     <!--  End Address  -->
     <!--  Begin Private Key  -->
     <Label Grid.Row="3"
            Grid.Column="0"
            Content="Private Key:" />
-    <TextBox Grid.Row="3"
-             Grid.Column="1"
-             Grid.ColumnSpan="2"
-             Width="600"
-             Height="30"
-             Margin="0,4,10,2"
-             Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
+    <StackPanel Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="0,4,10,2"
+                Orientation="Horizontal">
+      <TextBox Width="500"
+               Height="30"
+               Text="{Binding PrivateKey, FallbackValue='L1wbKXkArGtdAZKiRjz52NyHVrSxH9eMgQ3FixEf2Vz4yitvGeu6'}" />
+      <Button Width="64"
+              Height="30"
+              Margin="6,0,0,0"
+              Command="{Binding CopyPrivateKeyCommand}"
+              Content="Copy"
+              ToolTip="Copy the private key to the clipboard" />
+    </StackPanel>
     <!--  End Private Key  -->
     <!--  Begin Keys Searched  -->
     <GroupBox Grid.Row="1"
